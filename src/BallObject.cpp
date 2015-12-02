@@ -1,15 +1,26 @@
 #include "cgcommon.h"
 #include "BallObject.h"
+#include <QDataStream>
+
 
 BallObject::BallObject()
 {
+    mVerticalVelocity = -2.4;
     mRadius = 5;
-    mTx = 100;
-    mTy = 100;
+    mTx = 25;
+    mTy = 25;
     mColor = QColor(255,0,0,255);
 }
 
-/*
+void BallObject::keyPressEvent(QKeyEvent *pEvent)
+{
+    if(pEvent->key() == Qt::Key_Space)
+    {
+        setPos(x(), y()-mVerticalVelocity);
+    }
+}
+
+
 void BallObject::predraw() const
 {
     // Save the curent color and polygon fill state
@@ -38,4 +49,4 @@ void BallObject::postdraw() const
     // Restore previous color and polygon fill state
     glPopAttrib();
 }
-*/
+

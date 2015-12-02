@@ -1,13 +1,17 @@
 #ifndef BALLOBJECT_H
 #define BALLOBJECT_H
 
+#include "QGraphicsEllipseItem"
+#include "QKeyEvent"
 #include "QPointF"
 #include "QColor"
 
-class BallObject
+class BallObject:public QGraphicsEllipseItem
 {
 public:
     BallObject();
+
+    void keyPressEvent(QKeyEvent *pEvent); //i.e. when simulation starts
 
     // Set base properties
     void setColor(const QColor &pColor);
@@ -33,9 +37,9 @@ public:
 
     int getRotationAngle() const;
 
-    //virtual void predraw() const;
-    //virtual void draw() const;
-    //virtual void postdraw() const;
+    virtual void predraw() const;
+    virtual void draw() const;
+    virtual void postdraw() const;
 
 protected:
     QPointF mCenter;
@@ -44,7 +48,7 @@ protected:
     int mRadius;
 
     // The components of the transformations
-    double mTx, mTy;
+    double mTx, mTy, mVerticalVelocity;
     double mThetaInDegrees;
     double mSx, mSy;
 
