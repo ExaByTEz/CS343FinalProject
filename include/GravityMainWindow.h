@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::GravityMainWindow *ui;
+
+protected slots:
+    void on_pushButton_clicked();
 };
 
 #endif // GRAVITYMAINWINDOW_H
