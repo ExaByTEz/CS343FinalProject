@@ -12,6 +12,7 @@ BallObject::BallObject()
     mColor = QColor(255,0,0,255);
 }
 
+//test comment
 void BallObject::keyPressEvent(QKeyEvent *pEvent)
 {
     if(pEvent->key() == Qt::Key_Space)
