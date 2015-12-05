@@ -251,7 +251,7 @@ p, li { white-space: pre-wrap; }
      </rectf>
     </property>
    </widget>
-   <widget class="GL2DDrawingWidget" name="widget" native="true">
+   <widget class="GL2DDrawingWidget" name="mainDrawingWidget" native="true">
     <property name="enabled">
      <bool>true</bool>
     </property>

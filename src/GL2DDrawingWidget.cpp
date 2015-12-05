@@ -1,6 +1,8 @@
 #include "BallObject.h"
 #include "GL2DDrawingWidget.h"
 
+#include <QDebug>
+
 GL2DDrawingWidget::GL2DDrawingWidget(QWidget *parent, QGLWidget *share) :
     QGLWidget(QGLFormat(QGL::SingleBuffer | QGL::SampleBuffers), parent, share)
 {
@@ -24,6 +26,23 @@ GL2DDrawingWidget::~GL2DDrawingWidget()
    // }
 }
 
+//When the drawing widget is clicked
+void GL2DDrawingWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+{
+    // For left-button clicks, signal the request for a new mouse point
+    if(pEvent->button() == Qt::LeftButton)
+    {
+        if(pEvent->pos().x() >= 0 && pEvent->pos().x() < mW &&
+           pEvent->pos().y() >= 0 && pEvent->pos().y() < mH)
+        {
+            emit newPointRequested(pEvent->pos()); //Top Left as origin
+        }
+    }
+
+    // Pass event up the inheritance chain
+    QGLWidget::mouseReleaseEvent(pEvent);
+}
+
 void GL2DDrawingWidget::drawContents()
 {
     // Clear the buffer
@@ -34,6 +53,7 @@ void GL2DDrawingWidget::drawContents()
     glPushMatrix(); glLoadIdentity();
     glTranslatef(0.5f, 0.5f, 0.0f);
 
+    qDebug() << "mScene.size() = " << mScene.size();
     // Draw the scene one shape at a time
     for(int i=0; i<mScene.size(); i++)
     {
@@ -44,3 +64,15 @@ void GL2DDrawingWidget::drawContents()
 
     glPopMatrix();
 }
+
+void GL2DDrawingWidget::addBall()
+{
+    debugMessage("addBall() called");
+    updateGL();
+}
+
+void GL2DDrawingWidget::debugMessage(QString pMsg)
+{
+    qDebug() << pMsg;
+}
+

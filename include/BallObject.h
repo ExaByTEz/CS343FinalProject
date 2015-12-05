@@ -8,6 +8,7 @@
 
 class BallObject:public QGraphicsEllipseItem
 {
+
 public:
     BallObject();
 
