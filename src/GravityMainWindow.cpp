@@ -47,10 +47,10 @@ GravityMainWindow::~GravityMainWindow()
     delete ui;
 }
 
-void GravityMainWindow::on_pushButton_clicked()
+/*void GravityMainWindow::on_pushButton_clicked()
 {
     qDebug() << "Button Pressed";
     QCoreApplication::postEvent(ui->graphicsView, new QKeyEvent(QEvent::KeyPress, Qt::Key_Space, Qt::NoModifier));
 
 
-}
+}*/
