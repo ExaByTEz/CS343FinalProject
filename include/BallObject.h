@@ -10,7 +10,7 @@ class BallObject:public QGraphicsEllipseItem
 {
 
 public:
-    BallObject();
+    BallObject(const QPoint &pP1);
 
     void keyPressEvent(QKeyEvent *pEvent); //i.e. when simulation starts
 
@@ -42,8 +42,8 @@ public:
     virtual void draw() const;
     virtual void postdraw() const;
 
+    QPointF mCenter; //Move to protected
 protected:
-    QPointF mCenter;
 
     // What is the object's radius? (only makes sense for a circle)
     int mRadius;
@@ -56,9 +56,6 @@ protected:
     // The color of this object
     QColor mColor;
 
-//signals:
-
-//public slots:
 };
 
 #endif // BALLOBJECT_H

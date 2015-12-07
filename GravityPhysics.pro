@@ -23,14 +23,17 @@ SOURCES += src/main.cpp\
     src/GravityMainWindow.cpp \
     src/main.cpp \
     src/BallObject.cpp \
-    src/GL2DDrawingWidget.cpp
+    src/GL2DDrawingWidget.cpp \
+    src/OpenGLRenderable.cpp
 
 HEADERS  += include/GravityMainWindow.h \
     include/GravityMainWindow.h \
     include/BallObject.h \
     include/cgcommon.h \
-    include/GL2DDrawingWidget.h
+    include/GL2DDrawingWidget.h \
+    include/OpenGLRenderable.h
 
 FORMS    += forms/gravitymainwindow.ui
 
-DISTFILES +=
+DISTFILES += \
+    WorkingBibliography

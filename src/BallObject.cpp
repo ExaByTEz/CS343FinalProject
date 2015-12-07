@@ -3,13 +3,11 @@
 #include <QDataStream>
 #include <QDebug>
 
-BallObject::BallObject()
+BallObject::BallObject(const QPoint &pP1)
 {
     mVerticalVelocity = -2.4;
     mRadius = 20;
-    mTx = 25;
-    mTy = 25;
-    mCenter = QPointF(10.f, 10.f);
+    mCenter = pP1;
     mColor = QColor(255,100,100,255);
 }
 

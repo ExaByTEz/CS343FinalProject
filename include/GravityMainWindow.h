@@ -20,7 +20,7 @@ private:
     Ui::GravityMainWindow *ui;
 
 signals:
-    void newBall();
+    void newBall(QPoint pP1);
 
 protected slots:
     void on_pushButton_clicked();

@@ -13,10 +13,10 @@ GravityMainWindow::GravityMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-    //ui->mainDrawingWidget->drawContents(); //make private
-
-    connect(this, SIGNAL(newBall()), ui->mainDrawingWidget, SLOT(addBall()));
+#ifndef _WIN32   // The cross cursor is all-black and invisible on windows (boo)
+    ui->mainGLWidget->setCursor(Qt::CrossCursor);
+#endif
+    connect(this, SIGNAL(newBall(QPoint)), ui->mainDrawingWidget, SLOT(addBall(QPoint)));
 
 }
 
@@ -27,13 +27,13 @@ GravityMainWindow::~GravityMainWindow()
 
 void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPos)
 {
-    qDebug() << "new point requested at " << pPos.x() <<"," << pPos.y();
+    qDebug() << "GravityMainWindow.cpp: on_mainDrawingWidget_newPointRequested at " << pPos.x() <<"," << pPos.y();
+    emit newBall(pPos);
 }
 
 void GravityMainWindow::on_pushButton_clicked()
 {
     qDebug() << "Button Pressed";
     //QCoreApplication::postEvent(ui->graphicsView, new QKeyEvent(QEvent::KeyPress, Qt::Key_Space, Qt::NoModifier));
-    emit newBall();
 }
 
