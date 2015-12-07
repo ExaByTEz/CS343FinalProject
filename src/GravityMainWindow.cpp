@@ -17,7 +17,6 @@ GravityMainWindow::GravityMainWindow(QWidget *parent) :
     ui->mainGLWidget->setCursor(Qt::CrossCursor);
 #endif
     connect(this, SIGNAL(newBall(QPoint)), ui->mainDrawingWidget, SLOT(addBall(QPoint)));
-
 }
 
 GravityMainWindow::~GravityMainWindow()
@@ -33,7 +32,13 @@ void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPo
 
 void GravityMainWindow::on_pushButton_clicked()
 {
-    qDebug() << "Button Pressed";
-    //QCoreApplication::postEvent(ui->graphicsView, new QKeyEvent(QEvent::KeyPress, Qt::Key_Space, Qt::NoModifier));
+    if(!mStartSimulation)
+    {
+        qDebug() << "GravityMainWindow: Button Pressed";
+        QTimer *timer = new QTimer(this);
+        connect(timer, SIGNAL(timeout()), ui->mainDrawingWidget, SLOT(updateBall()));
+        timer->start(50);
+    }
+    mStartSimulation = true;
 }
 

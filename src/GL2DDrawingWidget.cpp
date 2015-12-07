@@ -170,6 +170,16 @@ void GL2DDrawingWidget::addBall(QPoint pP1)
     updateGL();
 }
 
+void GL2DDrawingWidget::updateBall()
+{
+    //Update every ball
+    for(int i=0; i<mScene.size(); i++)
+    {
+        mScene[i]->update();
+    }
+    updateGL();
+}
+
 void GL2DDrawingWidget::debugMessage(QString pMsg)
 {
     qDebug() << pMsg;

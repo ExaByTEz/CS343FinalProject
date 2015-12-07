@@ -18,6 +18,7 @@ public:
 
 private:
     Ui::GravityMainWindow *ui;
+    bool mStartSimulation = false;
 
 signals:
     void newBall(QPoint pP1);

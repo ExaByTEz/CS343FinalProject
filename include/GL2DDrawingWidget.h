@@ -33,6 +33,7 @@ protected:
 
 public slots:
     void addBall(QPoint pP1);
+    void updateBall();
 
 private:
     // OpenGLRenderable overloaded functions

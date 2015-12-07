@@ -32,21 +32,10 @@ void BallObject::predraw() const
 
 void BallObject::draw() const
 {
-    /*
-    glBegin(GL_LINE_LOOP);
-
-    for(int i = 0; i < 360; i++)
-    {
-        glVertex2f(mTx + cos(i*(M_PI/180))*mRadius, mTy + sin(M_PI/180)*mRadius);
-    }
-
-    glEnd();
-    */
-
     // Approximate a circle with a bunch of triangles/line segments
     glBegin(GL_TRIANGLE_FAN);
 
-    // Start with the center (but only if filled)
+    // Start with the center
     QPointF lPoint = mCenter;
 
     glVertex2d(lPoint.x(), lPoint.y());
@@ -57,12 +46,10 @@ void BallObject::draw() const
         double angle = lTheta/180.0*M_PI;
         QPointF lBefore(mCenter.x() + sin(angle)*mRadius, mCenter.y() + cos(angle)*mRadius);
         lPoint = lBefore;
-        //qDebug() << "lPoint = " << lPoint.x() << "," << lPoint.y();
         glVertex2d(lPoint.x(), lPoint.y());
     }
 
     glEnd();
-
 }
 
 void BallObject::postdraw() const
@@ -71,3 +58,14 @@ void BallObject::postdraw() const
     glPopAttrib();
 }
 
+//Updates the ball
+void BallObject::update()
+{
+    //Only move the ball down until it reaches the edge of the screen for now
+    //Note: Bottom Left (x, y) = (0, 0)
+    if(mCenter.y() - mRadius > 0)
+    {
+        //qDebug() << "BallObject: ("+ QString::number(mCenter.x() + mRadius) + ","+QString::number(mCenter.y() + mRadius) + ")";
+        mCenter.ry() += mVerticalVelocity;
+    }
+}

@@ -38,24 +38,26 @@ public:
 
     int getRotationAngle() const;
 
+    void update();
+
     virtual void predraw() const;
     virtual void draw() const;
     virtual void postdraw() const;
 
     QPointF mCenter; //Move to protected
 protected:
-
-    // What is the object's radius? (only makes sense for a circle)
     int mRadius;
 
     // The components of the transformations
-    double mTx, mTy, mVerticalVelocity;
+    double mTx;
+    double mTy;
+    double mVerticalVelocity;
     double mThetaInDegrees;
-    double mSx, mSy;
+    double mSx;
+    double mSy;
 
     // The color of this object
     QColor mColor;
-
 };
 
 #endif // BALLOBJECT_H
