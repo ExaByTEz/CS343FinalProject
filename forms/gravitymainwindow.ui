@@ -142,12 +142,12 @@ p, li { white-space: pre-wrap; }
         <widget class="QLabel" name="label_4">
          <property name="maximumSize">
           <size>
-           <width>50</width>
+           <width>100</width>
            <height>25</height>
           </size>
          </property>
          <property name="text">
-          <string>TextLabel</string>
+          <string>Vertical Velocity</string>
          </property>
         </widget>
        </item>
@@ -172,21 +172,9 @@ p, li { white-space: pre-wrap; }
      </item>
      <item>
       <widget class="QComboBox" name="comboBox">
-       <item>
-        <property name="text">
-         <string>Item1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Item2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Item3</string>
-        </property>
-       </item>
+       <property name="insertPolicy">
+        <enum>QComboBox::InsertAtBottom</enum>
+       </property>
       </widget>
      </item>
      <item>

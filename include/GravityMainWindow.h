@@ -18,14 +18,19 @@ public:
 
 private:
     Ui::GravityMainWindow *ui;
+    QTimer *timer;
     bool mStartSimulation = false;
+    int mNumItems = 0;
+    int mActiveIndex = -1;
 
 signals:
-    void newBall(QPoint pP1);
+    void newBall(QPoint pP1, int pID);
 
 protected slots:
     void on_pushButton_clicked();
     void on_mainDrawingWidget_newPointRequested(const QPoint &pPos);
+    void on_comboBox_currentIndexChanged(int pIndex);
+    void updateGUI();
 };
 
 #endif // GRAVITYMAINWINDOW_H

@@ -18,6 +18,7 @@ public:
     GL2DDrawingWidget(QWidget *parent = 0, QGLWidget *share = 0);
     virtual ~GL2DDrawingWidget();
     void debugMessage(QString pMsg);
+    BallObject* getBall(int pIndex);
 
 
 signals:
@@ -32,7 +33,7 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
 
 public slots:
-    void addBall(QPoint pP1);
+    void addBall(QPoint pP1, int pID);
     void updateBall();
 
 private:

@@ -3,20 +3,18 @@
 #include <QDataStream>
 #include <QDebug>
 
-BallObject::BallObject(const QPoint &pP1)
+BallObject::BallObject(const QPoint &pP1, const int pID)
 {
-    mVerticalVelocity = -2.4;
+    mVerticalVelocity = -1-(qrand() % 9); //random velocity
     mRadius = 20;
     mCenter = pP1;
     mColor = QColor(255,100,100,255);
+    mID = pID;
 }
 
-void BallObject::keyPressEvent(QKeyEvent *pEvent)
+double BallObject::getVerticalVelocity()
 {
-    if(pEvent->key() == Qt::Key_Space)
-    {
-        setPos(x(), y()-mVerticalVelocity);
-    }
+    return mVerticalVelocity;
 }
 
 
@@ -58,14 +56,25 @@ void BallObject::postdraw() const
     glPopAttrib();
 }
 
+int BallObject::getID()
+{
+    return mID;
+}
+
 //Updates the ball
 void BallObject::update()
 {
     //Only move the ball down until it reaches the edge of the screen for now
     //Note: Bottom Left (x, y) = (0, 0)
-    if(mCenter.y() - mRadius > 0)
+    if(mCenter.y() - mRadius + mVerticalVelocity > 0)
     {
         //qDebug() << "BallObject: ("+ QString::number(mCenter.x() + mRadius) + ","+QString::number(mCenter.y() + mRadius) + ")";
         mCenter.ry() += mVerticalVelocity;
+    }
+    else
+    {
+        double distToGround = mCenter.y() - mRadius;
+        //qDebug() << "BallObject: Distance to ground before collision: " + QString::number(distToGround);
+        //mVerticalVelocity *= -1;
     }
 }
