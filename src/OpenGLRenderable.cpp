@@ -5,7 +5,8 @@ OpenGLRenderable::OpenGLRenderable(double pFOV, double pNear, double pFar)
 {
     mShader = NULL;
 
-    mW = mH = -1;
+    mW = -1;
+    mH = -1;
     mHorizFOV = pFOV;
     mNear = pNear;
     mFar = pFar;
@@ -18,9 +19,12 @@ OpenGLRenderable::OpenGLRenderable(bool p2DContent)
     if(!p2DContent) OpenGLRenderable();
     else
     {
-        mW = mH = -1;
+        mW = -1;
+        mH = -1;
         mShader = NULL;
-        mHorizFOV = mNear = mFar = 0.0;
+        mHorizFOV = 0.0;
+        mNear = 0.0;
+        mFar = 0.0;
         mOrtho2D = true;
     }
 }
@@ -44,7 +48,8 @@ void OpenGLRenderable::initializeGLRenderable(bool pAllowAliasing)
 
 void OpenGLRenderable::resizeGLRenderable(int w, int h)
 {
-    mW = w; mH = h;
+    mW = w;
+    mH = h;
 
     // Setup Viewport
     glViewport(0, 0, mW, mH);

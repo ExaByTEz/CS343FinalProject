@@ -12,7 +12,11 @@
 GL2DDrawingWidget::GL2DDrawingWidget(QWidget *parent, QGLWidget *share) :
     QGLWidget(QGLFormat(QGL::SingleBuffer | QGL::SampleBuffers), parent, share), OpenGLRenderable(true)
 {
-    mActiveShapeIndex = -1;
+    mActiveShapeIndex = -1; //no ball objects exist yet
+
+    //Currently set to be 500x500 screen (fixed size)
+    mW = 500;
+    mH = 500;
 
     // For mouse move events and keyboard presses
     setMouseTracking(true);
@@ -54,7 +58,8 @@ void GL2DDrawingWidget::initializeGL()
 
 void GL2DDrawingWidget::resizeGL(int pW, int pH)
 {
-    mW = pW; mH = pH;
+    mW = pW;
+    mH = pH;
 
     // Accont for hi-DPI displays (Retina Displays)
 
@@ -165,7 +170,7 @@ void GL2DDrawingWidget::addBall(QPoint pP1, int pID)
 
     BallObject *newBall = new BallObject(pP1, pID);
     mScene.push_back((BallObject*)newBall); //Add ball to the scene
-    debugMessage(QString("GL2DDrawingWidget: addBall() called, created ball at ") + QString::number(newBall->mCenter.x()) + QString(",") + QString::number(newBall->mCenter.y()));
+    //debugMessage(QString("GL2DDrawingWidget: addBall() called, created ball at ") + QString::number(newBall->mCenter.x()) + QString(",") + QString::number(newBall->mCenter.y()));
 
     updateGL();
 }
