@@ -12,6 +12,11 @@ BallObject::BallObject(const QPoint &pP1, const int pID)
     mID = pID;
 }
 
+void BallObject::setColor(const QColor &pColor)
+{
+    mColor = pColor;
+}
+
 double BallObject::getVerticalVelocity()
 {
     return mVerticalVelocity;
@@ -39,6 +44,7 @@ void BallObject::draw() const
     glVertex2d(lPoint.x(), lPoint.y());
 
     // Rotate around the circle adding triangles/line segments
+
     for(int lTheta = 0; lTheta <= 360; lTheta++)
     {
         double angle = lTheta/180.0*M_PI;

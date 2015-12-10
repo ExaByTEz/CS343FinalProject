@@ -40,7 +40,12 @@ void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPo
 void GravityMainWindow::on_comboBox_currentIndexChanged(int pIndex)
 {
     qDebug() << "GravityMainWindow: Selection changed to " + QString::number(pIndex);
+    if(mActiveIndex >= 0) ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(255, 100, 100, 255)); //set previous to default color
     mActiveIndex = pIndex;
+    ui->textEdit_3->setText(QString::number(ui->mainDrawingWidget->getBall(mActiveIndex)->getVerticalVelocity()));
+    ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(100, 100, 255, 255)); //blue color
+
+    ui->mainDrawingWidget->updateGL();
 }
 
 void GravityMainWindow::updateGUI()
