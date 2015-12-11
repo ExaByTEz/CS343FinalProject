@@ -4,6 +4,7 @@
 #include "QGraphicsLineItem"
 
 #include <QGLWidget>
+#include <QPalette>
 #include "BallObject.h"
 #include <QDebug>
 GravityMainWindow::GravityMainWindow(QWidget *parent) :
@@ -12,34 +13,10 @@ GravityMainWindow::GravityMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->graphicsView->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DirectRendering)));
-
-    ui->widget->drawContents();
-    ui->widget->updateGL();
-
-    //Create scene
-    QGraphicsScene* scene = new QGraphicsScene();
-
-    //Temporary
-    //Add a line to the scene
-    QGraphicsLineItem* ground = new QGraphicsLineItem();
-    ground->setLine(0, 400, 490, 400);
-
-    scene->addItem(ground);
-    //Create a ball at position (50,50) with w=25 and h=25
-    BallObject* lBall = new BallObject();
-    lBall->setRect(50, 50, 25, 25);
-
-
-    //add item to scene
-    scene->addItem(lBall);
-
-    lBall->setFlag(QGraphicsItem::ItemIsFocusable);
-    lBall->setFocus();
-
-    //Add the scene to the graphics view
-    ui->graphicsView->setScene(scene);
-    //ui->graphicsView->show();
+#ifndef _WIN32   // The cross cursor is all-black and invisible on windows (boo)
+    ui->mainGLWidget->setCursor(Qt::CrossCursor);
+#endif
+    connect(this, SIGNAL(newBall(QPoint)), ui->mainDrawingWidget, SLOT(addBall(QPoint)));
 }
 
 GravityMainWindow::~GravityMainWindow()
@@ -47,10 +24,21 @@ GravityMainWindow::~GravityMainWindow()
     delete ui;
 }
 
+void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPos)
+{
+    qDebug() << "GravityMainWindow.cpp: on_mainDrawingWidget_newPointRequested at " << pPos.x() <<"," << pPos.y();
+    emit newBall(pPos);
+}
+
 void GravityMainWindow::on_pushButton_clicked()
 {
-    qDebug() << "Button Pressed";
-    QCoreApplication::postEvent(ui->graphicsView, new QKeyEvent(QEvent::KeyPress, Qt::Key_Space, Qt::NoModifier));
-
-
+    if(!mStartSimulation)
+    {
+        qDebug() << "GravityMainWindow: Button Pressed";
+        QTimer *timer = new QTimer(this);
+        connect(timer, SIGNAL(timeout()), ui->mainDrawingWidget, SLOT(updateBall()));
+        timer->start(50);
+    }
+    mStartSimulation = true;
 }
+

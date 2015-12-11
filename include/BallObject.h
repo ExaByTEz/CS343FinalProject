@@ -8,8 +8,9 @@
 
 class BallObject:public QGraphicsEllipseItem
 {
+
 public:
-    BallObject();
+    BallObject(const QPoint &pP1);
 
     void keyPressEvent(QKeyEvent *pEvent); //i.e. when simulation starts
 
@@ -37,27 +38,40 @@ public:
 
     int getRotationAngle() const;
 
-    virtual void predraw() const;
+    void update();
+
+    virtual void predraw();
     virtual void draw() const;
-    virtual void postdraw() const;
+    virtual void postdraw();
+
+    double mCenterX() const;
+    double mCenterY() const;
+
+    void setMCenterX(double x) const;
+    void setMCenterY(double y) const;
+
+    QPointF getMCenter() const;
+
+
 
 protected:
-    QPointF mCenter;
-
-    // What is the object's radius? (only makes sense for a circle)
     int mRadius;
 
     // The components of the transformations
-    double mTx, mTy, mVerticalVelocity;
+    double mTx;
+    double mTy;
+    double mVerticalAcceleration;
     double mThetaInDegrees;
-    double mSx, mSy;
+    double mSx;
+    double mSy;
+    int mFrame;
+    double mInitialVelocity;
+    double mLossValue;
+    double mCurrentVelocity;
 
     // The color of this object
     QColor mColor;
-
-//signals:
-
-//public slots:
+        QPointF mCenter; //Move to protected
 };
 
 #endif // BALLOBJECT_H

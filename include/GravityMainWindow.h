@@ -2,6 +2,7 @@
 #define GRAVITYMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPoint>
 
 namespace Ui {
 class GravityMainWindow;
@@ -17,9 +18,14 @@ public:
 
 private:
     Ui::GravityMainWindow *ui;
+    bool mStartSimulation = false;
+
+signals:
+    void newBall(QPoint pP1);
 
 protected slots:
     void on_pushButton_clicked();
+    void on_mainDrawingWidget_newPointRequested(const QPoint &pPos);
 };
 
 #endif // GRAVITYMAINWINDOW_H
