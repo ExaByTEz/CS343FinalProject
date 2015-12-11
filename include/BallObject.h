@@ -40,9 +40,9 @@ public:
 
     void update();
 
-    virtual void predraw() const;
+    virtual void predraw();
     virtual void draw() const;
-    virtual void postdraw() const;
+    virtual void postdraw();
 
     int getID();
 
@@ -53,10 +53,15 @@ protected:
     // The components of the transformations
     double mTx;
     double mTy;
-    double mVerticalVelocity;
+    double mVerticalAcceleration;
     double mThetaInDegrees;
     double mSx;
     double mSy;
+    int mFrame;
+    double mInitialVelocity;
+    double mLossValue;
+    double mCurrentVelocity;
+
 
     int mID;
 
