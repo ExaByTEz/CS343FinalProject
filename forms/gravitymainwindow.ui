@@ -137,12 +137,13 @@
         <widget class="QLabel" name="radiusLabel">
          <property name="maximumSize">
           <size>
-           <width>50</width>
+           <width>100</width>
            <height>25</height>
           </size>
          </property>
          <property name="text">
           <string>Radius</string>
+          <string>Vertical Velocity</string>
          </property>
         </widget>
        </item>
@@ -166,6 +167,13 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox">
+       <property name="insertPolicy">
+        <enum>QComboBox::InsertAtBottom</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="Line" name="line_2">
@@ -229,7 +237,7 @@
      </rectf>
     </property>
    </widget>
-   <widget class="GL2DDrawingWidget" name="widget" native="true">
+   <widget class="GL2DDrawingWidget" name="mainDrawingWidget" native="true">
     <property name="enabled">
      <bool>true</bool>
     </property>

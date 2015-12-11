@@ -1,24 +1,25 @@
 #include "cgcommon.h"
 #include "BallObject.h"
 #include <QDataStream>
+#include <QDebug>
 
-
-BallObject::BallObject()
+BallObject::BallObject(const QPoint &pP1, const int pID)
 {
-    mVerticalVelocity = -2.4;
-    mRadius = 5;
-    mTx = 25;
-    mTy = 25;
-    mColor = QColor(255,0,0,255);
+    mVerticalVelocity = -1-(qrand() % 9); //random velocity
+    mRadius = 20;
+    mCenter = pP1;
+    mColor = QColor(255,100,100,255);
+    mID = pID;
 }
 
-//test comment
-void BallObject::keyPressEvent(QKeyEvent *pEvent)
+void BallObject::setColor(const QColor &pColor)
 {
-    if(pEvent->key() == Qt::Key_Space)
-    {
-        setPos(x(), y()-mVerticalVelocity);
-    }
+    mColor = pColor;
+}
+
+double BallObject::getVerticalVelocity()
+{
+    return mVerticalVelocity;
 }
 
 
@@ -34,12 +35,22 @@ void BallObject::predraw() const
 
 void BallObject::draw() const
 {
-    glBegin(GL_LINE_LOOP);
+    // Approximate a circle with a bunch of triangles/line segments
+    glBegin(GL_TRIANGLE_FAN);
 
-    for(int i = 0; i < 360; i++)
+    // Start with the center
+    QPointF lPoint = mCenter;
+
+    glVertex2d(lPoint.x(), lPoint.y());
+
+    // Rotate around the circle adding triangles/line segments
+
+    for(int lTheta = 0; lTheta <= 360; lTheta++)
     {
-        //TODO: Change to center instead of x and y
-        glVertex2f(mTx + cos(i*(M_PI/180))*mRadius, mTy + sin(M_PI/180)*mRadius);
+        double angle = lTheta/180.0*M_PI;
+        QPointF lBefore(mCenter.x() + sin(angle)*mRadius, mCenter.y() + cos(angle)*mRadius);
+        lPoint = lBefore;
+        glVertex2d(lPoint.x(), lPoint.y());
     }
 
     glEnd();
@@ -51,3 +62,25 @@ void BallObject::postdraw() const
     glPopAttrib();
 }
 
+int BallObject::getID()
+{
+    return mID;
+}
+
+//Updates the ball
+void BallObject::update()
+{
+    //Only move the ball down until it reaches the edge of the screen for now
+    //Note: Bottom Left (x, y) = (0, 0)
+    if(mCenter.y() - mRadius + mVerticalVelocity > 0)
+    {
+        //qDebug() << "BallObject: ("+ QString::number(mCenter.x() + mRadius) + ","+QString::number(mCenter.y() + mRadius) + ")";
+        mCenter.ry() += mVerticalVelocity;
+    }
+    else
+    {
+        double distToGround = mCenter.y() - mRadius;
+        //qDebug() << "BallObject: Distance to ground before collision: " + QString::number(distToGround);
+        //mVerticalVelocity *= -1;
+    }
+}
