@@ -42,7 +42,7 @@ void GravityMainWindow::on_comboBox_currentIndexChanged(int pIndex)
     //qDebug() << "GravityMainWindow: Selection changed to " + QString::number(pIndex);
     if(mActiveIndex >= 0) ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(255, 100, 100, 255)); //set the previous ball to a default color
     mActiveIndex = pIndex; //Update the new active index to the one passed from the parameter
-    //ui->textEdit_3->setText(QString::number(ui->mainDrawingWidget->getBall(mActiveIndex)->getVerticalVelocity()));
+    ui->yVelocitySpinBox->setValue(ui->mainDrawingWidget->getBall(mActiveIndex)->getVerticalVelocity());
     ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(100, 100, 255, 255)); //set the active ball to a blue color
 
     ui->mainDrawingWidget->updateGL();
@@ -50,7 +50,7 @@ void GravityMainWindow::on_comboBox_currentIndexChanged(int pIndex)
 
 void GravityMainWindow::updateGUI()
 {
-    //if(mActiveIndex >= 0) ui->textEdit_3->setText(QString::number(ui->mainDrawingWidget->getBall(mActiveIndex)->getVerticalVelocity()));
+    if(mActiveIndex >= 0) ui->yVelocitySpinBox->setValue(ui->mainDrawingWidget->getBall(mActiveIndex)->getVerticalVelocity());
 }
 
 void GravityMainWindow::on_resetButton_clicked()

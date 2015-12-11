@@ -196,3 +196,4 @@ BallObject *GL2DDrawingWidget::getBall(int pIndex)
     return mScene[pIndex];
 }
 
+

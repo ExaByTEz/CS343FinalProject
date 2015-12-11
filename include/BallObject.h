@@ -40,9 +40,9 @@ public:
 
     void update();
 
-    virtual void predraw();
+    virtual void predraw() const;
     virtual void draw() const;
-    virtual void postdraw();
+    virtual void postdraw() const;
 
     int getID();
 

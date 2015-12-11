@@ -28,14 +28,10 @@ double BallObject::getVerticalVelocity()
 }
 
 
-void BallObject::predraw()
+void BallObject::predraw() const
 {
     // Save the curent color and polygon fill state
     glPushAttrib(GL_CURRENT_BIT | GL_POLYGON_BIT);
-
-    // Execute gravity
-    mCenter.ry() += mFrame*(mInitialVelocity+mVerticalAcceleration*mFrame/2);
-    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mFrame;
 
     // Set current OpenGL color and fill mode
     glColor3ub(mColor.red(), mColor.green(), mColor.blue());
@@ -65,10 +61,24 @@ void BallObject::draw() const
     glEnd();
 }
 
-void BallObject::postdraw()
+void BallObject::postdraw() const
 {
     // Restore previous color and polygon fill state
     glPopAttrib();
+}
+
+int BallObject::getID()
+{
+    return mID;
+}
+
+//Updates the ball
+void BallObject::update()
+{
+
+    // Execute gravity
+    mCenter.ry() += mFrame*(mInitialVelocity+mVerticalAcceleration*mFrame/2);
+    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mFrame;
 
     // Iterate up one frame
     mFrame++;
@@ -80,28 +90,5 @@ void BallObject::postdraw()
         mInitialVelocity = -mCurrentVelocity*mLossValue;
         mFrame = 0;
 
-    }
-}
-
-int BallObject::getID()
-{
-    return mID;
-}
-
-//Updates the ball
-void BallObject::update()
-{
-    //Only move the ball down until it reaches the edge of the screen for now
-    //Note: Bottom Left (x, y) = (0, 0)
-    if(mCenter.y() - mRadius + mCurrentVelocity > 0)
-    {
-        //qDebug() << "BallObject: ("+ QString::number(mCenter.x() + mRadius) + ","+QString::number(mCenter.y() + mRadius) + ")";
-        mCenter.ry() += mCurrentVelocity;
-    }
-    else
-    {
-        double distToGround = mCenter.y() - mRadius;
-        //qDebug() << "BallObject: Distance to ground before collision: " + QString::number(distToGround);
-        //mVerticalVelocity *= -1;
     }
 }
