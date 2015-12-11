@@ -5,11 +5,16 @@
 
 BallObject::BallObject(const QPoint &pP1, const int pID)
 {
-    mVerticalVelocity = -1-(qrand() % 9); //random velocity
+    mVerticalAcceleration  = -1-(qrand() % 9); //random velocity
     mRadius = 20;
     mCenter = pP1;
     mColor = QColor(255,100,100,255);
     mID = pID;
+    mFrame = 0;
+    mInitialVelocity = 0;
+    mLossValue = 0.5;
+    mCurrentVelocity = 0;
+
 }
 
 void BallObject::setColor(const QColor &pColor)
@@ -19,14 +24,18 @@ void BallObject::setColor(const QColor &pColor)
 
 double BallObject::getVerticalVelocity()
 {
-    return mVerticalVelocity;
+    return mCurrentVelocity;
 }
 
 
-void BallObject::predraw() const
+void BallObject::predraw()
 {
     // Save the curent color and polygon fill state
     glPushAttrib(GL_CURRENT_BIT | GL_POLYGON_BIT);
+
+    // Execute gravity
+    mCenter.ry() += mFrame*(mInitialVelocity+mVerticalAcceleration*mFrame/2);
+    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mFrame;
 
     // Set current OpenGL color and fill mode
     glColor3ub(mColor.red(), mColor.green(), mColor.blue());
@@ -56,10 +65,22 @@ void BallObject::draw() const
     glEnd();
 }
 
-void BallObject::postdraw() const
+void BallObject::postdraw()
 {
     // Restore previous color and polygon fill state
     glPopAttrib();
+
+    // Iterate up one frame
+    mFrame++;
+
+    // If ball is below screen at all bounce ball
+    if(mCenter.y() - mRadius < 0)
+    {
+        mCenter.ry() = mRadius;
+        mInitialVelocity = -mCurrentVelocity*mLossValue;
+        mFrame = 0;
+
+    }
 }
 
 int BallObject::getID()
@@ -72,10 +93,10 @@ void BallObject::update()
 {
     //Only move the ball down until it reaches the edge of the screen for now
     //Note: Bottom Left (x, y) = (0, 0)
-    if(mCenter.y() - mRadius + mVerticalVelocity > 0)
+    if(mCenter.y() - mRadius + mCurrentVelocity > 0)
     {
         //qDebug() << "BallObject: ("+ QString::number(mCenter.x() + mRadius) + ","+QString::number(mCenter.y() + mRadius) + ")";
-        mCenter.ry() += mVerticalVelocity;
+        mCenter.ry() += mCurrentVelocity;
     }
     else
     {
