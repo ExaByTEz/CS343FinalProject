@@ -1,7 +1,13 @@
 #include "OpenGLRenderable.h"
 #include <QGLShaderProgram>
+/* Collision looks like this when you sync with commits on your local repository, you must manually resolve
+<<<<<<< HEAD
 //Hello World
 
+=======
+//test
+>>>>>>> origin/master
+*/
 OpenGLRenderable::OpenGLRenderable(double pFOV, double pNear, double pFar)
 {
     mShader = NULL;
