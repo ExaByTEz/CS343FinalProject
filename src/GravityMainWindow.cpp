@@ -5,7 +5,6 @@
 
 #include <QGLWidget>
 #include "BallObject.h"
-#include <QDebug>
 GravityMainWindow::GravityMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GravityMainWindow)
@@ -47,10 +46,19 @@ GravityMainWindow::~GravityMainWindow()
     delete ui;
 }
 
-void GravityMainWindow::on_pushButton_clicked()
+void GravityMainWindow::on_resetButton_clicked()
 {
-    qDebug() << "Button Pressed";
-    QCoreApplication::postEvent(ui->graphicsView, new QKeyEvent(QEvent::KeyPress, Qt::Key_Space, Qt::NoModifier));
+    // DEBUG CODE
+    ui->testLabel->setText("reset");
+}
 
-
+void GravityMainWindow::on_startButton_clicked()
+{
+    // DEBUG CODE
+    ui->testLabel->setText("start");
+}
+// Closes program when exit option is selected from Menu
+void GravityMainWindow::on_actionExit_triggered()
+{
+    exit(0);
 }
