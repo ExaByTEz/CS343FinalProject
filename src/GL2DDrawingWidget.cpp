@@ -142,6 +142,14 @@ void GL2DDrawingWidget::drawContents()
     glPopMatrix();
 }
 
+void GL2DDrawingWidget::updateGravity(double pValue)
+{
+    for(int i=0; i<mScene.size(); i++)
+    {
+        mScene[i]->setGravity(pValue);
+    }
+}
+
 void GL2DDrawingWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     // For left-button clicks, signal the request for a new mouse point
@@ -165,10 +173,10 @@ inline QPoint GL2DDrawingWidget::qtWidgetCoordsToOpenGLCoords(const QPoint &pPos
 }
 
 
-void GL2DDrawingWidget::addBall(QPoint pP1, int pID)
+void GL2DDrawingWidget::addBall(QPoint pP1, int pRadius, double pMass, double pYvelocity, int pID)
 {
 
-    BallObject *newBall = new BallObject(pP1, pID);
+    BallObject *newBall = new BallObject(pP1, pRadius, pMass, pYvelocity, pID);
     mScene.push_back((BallObject*)newBall); //Add ball to the scene
     //debugMessage(QString("GL2DDrawingWidget: addBall() called, created ball at ") + QString::number(newBall->mCenter.x()) + QString(",") + QString::number(newBall->mCenter.y()));
 

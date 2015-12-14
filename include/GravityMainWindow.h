@@ -24,16 +24,21 @@ private:
     int mActiveIndex = -1;
 
 signals:
-    void newBall(QPoint pP1, int pID);
+    void newBall(QPoint pP1, int pRadius, double pMass, double pYvelocity, int pID);
 
 protected slots:
     void on_resetButton_clicked();
     void on_startButton_clicked();
     void on_actionExit_triggered();
 
+
     //void on_pushButton_clicked();
     void on_mainDrawingWidget_newPointRequested(const QPoint &pPos);
     void on_comboBox_currentIndexChanged(int pIndex);
+    void on_radiusSpinBox_valueChanged(int pValue);
+    void on_massSpinBox_valueChanged(double pValue);
+    void on_yVelocitySpinBox_valueChanged(double pValue);
+    void on_gravitySpinBox_valueChanged(double pValue);
     void updateGUI();
 };
 

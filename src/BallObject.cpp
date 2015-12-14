@@ -3,18 +3,20 @@
 #include <QDataStream>
 #include <QDebug>
 
-BallObject::BallObject(const QPoint &pP1, const int pID)
+BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass, const double pYvelocity, const int pID)
 {
-    mVerticalAcceleration  = -1-(qrand() % 9); //random velocity
-    mRadius = 20;
+    mTime = 0;
+    mVerticalAcceleration  = 0;
+    mRadius = pRadius;
+    mMass = pMass;
     mCenter = pP1;
     mColor = QColor(255,100,100,255);
     mID = pID;
     mFrame = 0;
-    mInitialVelocity = 0;
+    mInitialVelocity = pYvelocity;
     mLossValue = 0.5;
-    mCurrentVelocity = 0;
-
+    mCurrentVelocity = pYvelocity;
+    mInitialHeight = pP1.y();
 }
 
 void BallObject::setColor(const QColor &pColor)
@@ -22,9 +24,55 @@ void BallObject::setColor(const QColor &pColor)
     mColor = pColor;
 }
 
+void BallObject::setRadius(int pRadius)
+{
+    mRadius = pRadius;
+}
+
+void BallObject::setMass(double pMass)
+{
+    mMass = pMass;
+}
+
+void BallObject::setVerticalVelocity(double pVerticalVelocity)
+{
+    //mInitialVelocity = pVerticalVelocity;
+    mCurrentVelocity = pVerticalVelocity;
+}
+
+void BallObject::setGravity(double pGravity)
+{
+    mVerticalAcceleration = pGravity; //i.e. -9.81 m/s/s by default
+}
+
+void BallObject::setTime(double pTime)
+{
+    mTime = pTime;
+}
+
+
+
+int BallObject::getRadius() const
+{
+    return mRadius;
+}
+
+double BallObject::getMass() const
+{
+    return mMass;
+}
+
+double BallObject::getTime() const
+{
+    return mTime;
+}
+
+
+
 double BallObject::getVerticalVelocity()
 {
     return mCurrentVelocity;
+    //return mInitialVelocity;
 }
 
 
@@ -76,19 +124,29 @@ int BallObject::getID()
 void BallObject::update()
 {
 
+    //Calculate seconds since impact
+    mTime = (mFrame * 50.)/1000.; //since update is called every 50 ms, 1000 ms = 1 sec
+
+
     // Execute gravity
-    mCenter.ry() += mFrame*(mInitialVelocity+mVerticalAcceleration*mFrame/2);
-    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mFrame;
+   // mCurrentVelocity = mCurrentVelocity + mTime * mVerticalAcceleration;
+   // mCenter.ry() += mCurrentVelocity;
+    mCenter.ry() += mTime*(mInitialVelocity+mVerticalAcceleration*mTime/2);
+    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mTime;
+
+    //TODO: Check for terminal velocity
 
     // Iterate up one frame
     mFrame++;
+    if(mFrame >= pow(2, 31)-1) mFrame = 0; //Temporary fail safe
 
     // If ball is below screen at all bounce ball
     if(mCenter.y() - mRadius < 0)
     {
         mCenter.ry() = mRadius;
         mInitialVelocity = -mCurrentVelocity*mLossValue;
-        mFrame = 0;
+        //mCurrentVelocity = -mCurrentVelocity*mLossValue; //temporary
+        //mFrame = 0; //will reset the time back to 0
 
     }
 }
