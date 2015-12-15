@@ -25,11 +25,7 @@ GL2DDrawingWidget::GL2DDrawingWidget(QWidget *parent, QGLWidget *share) :
 
 GL2DDrawingWidget::~GL2DDrawingWidget()
 {
-    while(!mScene.isEmpty())
-    {
-        delete mScene.last();
-        mScene.removeLast();
-    }
+    clearScene();
 }
 
 // GL Widget Functions
@@ -197,6 +193,16 @@ void GL2DDrawingWidget::updateBall()
 void GL2DDrawingWidget::debugMessage(QString pMsg)
 {
     qDebug() << pMsg;
+}
+
+void GL2DDrawingWidget::clearScene()
+{
+    while(!mScene.isEmpty())
+    {
+        delete mScene.last();
+        mScene.removeLast();
+    }
+    updateGL();
 }
 
 BallObject *GL2DDrawingWidget::getBall(int pIndex)

@@ -2,11 +2,11 @@
 #include "ui_gravitymainwindow.h"
 #include "QGraphicsScene"
 #include "QGraphicsLineItem"
+#include "BallObject.h"
 
 #include <QMainWindow>
 #include <QGLWidget>
 #include <QPalette>
-#include "BallObject.h"
 #include <QDebug>
 GravityMainWindow::GravityMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -46,6 +46,7 @@ void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPo
 void GravityMainWindow::on_comboBox_currentIndexChanged(int pIndex)
 {
     //qDebug() << "GravityMainWindow: Selection changed to " + QString::number(pIndex);
+    if(pIndex < 0) return; //when the combobox is cleared
     if(mActiveIndex >= 0) ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(255, 100, 100, 255)); //set the previous ball to a default color
     mActiveIndex = pIndex; //Update the new active index to the one passed from the parameter
 
@@ -98,7 +99,13 @@ void GravityMainWindow::updateGUI() //Updates GUI with the ball update
 
 void GravityMainWindow::on_resetButton_clicked()
 {
-
+    timer->stop();
+    mStartSimulation = false;
+    ui->startButton->setText("Start");
+    mActiveIndex = -1;
+    mNumItems = 0;
+    ui->comboBox->clear();
+    ui->mainDrawingWidget->clearScene();
 }
 
 void GravityMainWindow::on_startButton_clicked()
@@ -111,6 +118,7 @@ void GravityMainWindow::on_startButton_clicked()
         ui->gravitySpinBox->setEnabled(false);
         ui->massSpinBox->setEnabled(false);
         ui->yVelocitySpinBox->setEnabled(false);
+        ui->startButton->setText("Stop");
     }
     else
     {
@@ -120,6 +128,7 @@ void GravityMainWindow::on_startButton_clicked()
         ui->gravitySpinBox->setEnabled(true);
         ui->massSpinBox->setEnabled(true);
         ui->yVelocitySpinBox->setEnabled(true);
+        ui->startButton->setText("Start");
     }
     mStartSimulation = !mStartSimulation;
 

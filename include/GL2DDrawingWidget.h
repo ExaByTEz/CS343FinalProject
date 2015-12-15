@@ -19,6 +19,7 @@ public:
     virtual ~GL2DDrawingWidget();
     void updateGravity(double pValue);
     void debugMessage(QString pMsg);
+    void clearScene();
     BallObject* getBall(int pIndex);
 
 
