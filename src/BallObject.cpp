@@ -10,7 +10,6 @@ BallObject::BallObject(const QPoint &pP1, const int pID)
     mColor = QColor(255,100,100,255);
     mID = pID;
     mFrame = 0;
-    mInitialVelocity = 0;
     mLossValue = 0.8;
     mCurrentVelocity = 0;
     mForces = 0;
@@ -19,6 +18,9 @@ BallObject::BallObject(const QPoint &pP1, const int pID)
     mMass = 1;
     mHorizontalVelocity = .1;
     mHorizontalLossValue = 1;
+    mForces = 0;
+    mMass = 10;
+    mGravity = 9.8;
 }
 
 void BallObject::setColor(const QColor &pColor)
@@ -29,6 +31,16 @@ void BallObject::setColor(const QColor &pColor)
 double BallObject::getVerticalVelocity()
 {
     return mCurrentVelocity;
+}
+
+double BallObject::getLossValue()
+{
+    return mLossValue;
+}
+
+double BallObject::getVerticalAcceleration()
+{
+    return mVerticalAcceleration;
 }
 
 void BallObject::predraw() const
@@ -78,30 +90,6 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
-    /*if(mCenter.y() < mRadius)
-    {
-        mCenter.ry() = mRadius;
-    }
-    else
-    {
-        mForces += -mMass*mGravity;
-    }
-    mVerticalAcceleration = mForces / mMass;
-    mFrame += mTimeStep;
-    mCurrentVelocity += mFrame * mVerticalAcceleration;
-    mCenter.ry() += (mFrame * mCurrentVelocity);
-
-
-    if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
-    {
-        mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
-    }
-    else
-    {
-        mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
-    }
-    mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;*/
-
         mForces += -mMass*mGravity;
         mVerticalAcceleration = mForces / mMass;
         mFrame += mTimeStep;
@@ -126,4 +114,6 @@ void BallObject::update()
             mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
         }
         mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
+
+
 }
