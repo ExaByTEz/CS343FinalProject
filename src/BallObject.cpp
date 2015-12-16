@@ -15,8 +15,14 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mFrame = 0;
     mInitialVelocity = pYvelocity;
     mLossValue = 0.5;
-    mCurrentVelocity = pYvelocity;
     mInitialHeight = pP1.y();
+    mCurrentVelocity = 0;
+    mForces = 0;
+    mGravity = 5;
+    mTimeStep = 0.01;
+    mMass = 1;
+    mHorizontalVelocity = .1;
+    mHorizontalLossValue = 1;
 }
 
 void BallObject::setColor(const QColor &pColor)
@@ -75,7 +81,6 @@ double BallObject::getVerticalVelocity()
     //return mInitialVelocity;
 }
 
-
 void BallObject::predraw() const
 {
     // Save the curent color and polygon fill state
@@ -123,30 +128,28 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
+        mForces += -mMass*mGravity;
+        mVerticalAcceleration = mForces / mMass;
+        mFrame += mTimeStep;
+        if(mCenter.y() < mRadius)
+        {
+            mCurrentVelocity = -mCurrentVelocity*mLossValue;
+        }
+        else
+        {
+            mCurrentVelocity += mFrame * mVerticalAcceleration;
+        }
 
-    //Calculate seconds since impact
-    mTime = (mFrame * 50.)/1000.; //since update is called every 50 ms, 1000 ms = 1 sec
+        mCenter.ry() += (mFrame * mCurrentVelocity);
 
 
-    // Execute gravity
-   // mCurrentVelocity = mCurrentVelocity + mTime * mVerticalAcceleration;
-   // mCenter.ry() += mCurrentVelocity;
-    mCenter.ry() += mTime*(mInitialVelocity+mVerticalAcceleration*mTime/2);
-    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mTime;
-
-    //TODO: Check for terminal velocity
-
-    // Iterate up one frame
-    mFrame++;
-    if(mFrame >= pow(2, 31)-1) mFrame = 0; //Temporary fail safe
-
-    // If ball is below screen at all bounce ball
-    if(mCenter.y() - mRadius < 0)
-    {
-        mCenter.ry() = mRadius;
-        mInitialVelocity = -mCurrentVelocity*mLossValue;
-        //mCurrentVelocity = -mCurrentVelocity*mLossValue; //temporary
-        //mFrame = 0; //will reset the time back to 0
-
-    }
+        if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
+        {
+            mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
+        }
+        else
+        {
+            mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
+        }
+        mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
 }

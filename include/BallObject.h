@@ -64,13 +64,16 @@ protected:
     double mThetaInDegrees;
     double mSx;
     double mSy;
-    int mFrame;
+    double mFrame;
     double mInitialVelocity;
     double mLossValue;
     double mCurrentVelocity;
     double mMass;
-
-
+    double mForces;
+    double mGravity;
+    double mTimeStep;
+    double mHorizontalVelocity;
+    double mHorizontalLossValue;
     int mID;
 
     // The color of this object
