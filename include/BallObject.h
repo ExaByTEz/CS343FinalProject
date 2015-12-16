@@ -35,6 +35,9 @@ public:
     double getSy() const;
 
     double getVerticalVelocity();
+    double getInitialVelocity();
+    double getLossValue();
+    double getVerticalAcceleration();
 
     int getRotationAngle() const;
 
@@ -45,6 +48,8 @@ public:
     virtual void postdraw() const;
 
     int getID();
+
+
 
     QPointF mCenter; //Move to protected
 protected:
@@ -57,11 +62,14 @@ protected:
     double mThetaInDegrees;
     double mSx;
     double mSy;
-    int mFrame;
+    double mFrame;
     double mInitialVelocity;
     double mLossValue;
     double mCurrentVelocity;
-
+    double mTimeStep;
+    double mForces;
+    double mMass;
+    double mGravity;
 
     int mID;
 

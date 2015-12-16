@@ -11,9 +11,13 @@ BallObject::BallObject(const QPoint &pP1, const int pID)
     mColor = QColor(255,100,100,255);
     mID = pID;
     mFrame = 0;
-    mInitialVelocity = 0;
+    //mInitialVelocity = 0;
     mLossValue = 0.5;
     mCurrentVelocity = 0;
+    mTimeStep = 0;
+    mForces = 0;
+    mMass = 10;
+    mGravity = 9.8;
 
 }
 
@@ -27,6 +31,20 @@ double BallObject::getVerticalVelocity()
     return mCurrentVelocity;
 }
 
+double BallObject::getInitialVelocity()
+{
+    return mInitialVelocity;
+}
+
+double BallObject::getLossValue()
+{
+    return mLossValue;
+}
+
+double BallObject::getVerticalAcceleration()
+{
+    return mVerticalAcceleration;
+}
 
 void BallObject::predraw() const
 {
@@ -75,20 +93,18 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
-
-    // Execute gravity
-    mCenter.ry() += mFrame*(mInitialVelocity+mVerticalAcceleration*mFrame/2);
-    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mFrame;
-
-    // Iterate up one frame
-    mFrame++;
-
-    // If ball is below screen at all bounce ball
-    if(mCenter.y() - mRadius < 0)
+    if(mCenter.y()-mRadius < 0)
     {
-        mCenter.ry() = mRadius;
-        mInitialVelocity = -mCurrentVelocity*mLossValue;
-        mFrame = 0;
-
+        //Velocity = impusle
+        mForces += -mCenter.y()*mGravity;
     }
+    else
+    {
+        mForces += mCenter.y()+mFrame;
+    }
+    mVerticalAcceleration = mForces / mMass;
+    mFrame += mTimeStep;
+    mCenter.ry() += mFrame * mCurrentVelocity;
+    mCurrentVelocity += mFrame * mVerticalAcceleration;
+
 }
