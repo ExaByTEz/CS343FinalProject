@@ -2,10 +2,12 @@
 #include "ui_gravitymainwindow.h"
 #include "QGraphicsScene"
 #include "QGraphicsLineItem"
+#include "BallObject.h"
 
+#include <QMainWindow>
 #include <QGLWidget>
 #include <QPalette>
-#include "BallObject.h"
+#include <QDebug>
 GravityMainWindow::GravityMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GravityMainWindow)
@@ -18,7 +20,7 @@ GravityMainWindow::GravityMainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
 
-    connect(this, SIGNAL(newBall(QPoint, int)), ui->mainDrawingWidget, SLOT(addBall(QPoint, int)));
+    connect(this, SIGNAL(newBall(QPoint, int, double, double, int)), ui->mainDrawingWidget, SLOT(addBall(QPoint, int, double, double, int)));
     //the timer will call these methods every 50 ms
     connect(timer, SIGNAL(timeout()), ui->mainDrawingWidget, SLOT(updateBall()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateGUI()));
@@ -33,46 +35,100 @@ GravityMainWindow::~GravityMainWindow()
 void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPos)
 {
     //qDebug() << "GravityMainWindow.cpp: on_mainDrawingWidget_newPointRequested at " << pPos.x() <<"," << pPos.y();
-    emit newBall(pPos, ++mNumItems);
+    if(mStartSimulation) return; //Don't allow user to add a ball while running
+    emit newBall(pPos,ui->radiusSpinBox->value(), ui->massSpinBox->value(), 0, ++mNumItems);
+    ui->mainDrawingWidget->updateGravity(ui->gravitySpinBox->value()); //update gravity on new ball
+
     ui->comboBox->addItem("Ball " + QString::number(mNumItems));
+    ui->comboBox->setCurrentIndex(ui->comboBox->count()-1); //Set focus to most recent item
 }
 
 void GravityMainWindow::on_comboBox_currentIndexChanged(int pIndex)
 {
     //qDebug() << "GravityMainWindow: Selection changed to " + QString::number(pIndex);
+    if(pIndex < 0) return; //when the combobox is cleared
     if(mActiveIndex >= 0) ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(255, 100, 100, 255)); //set the previous ball to a default color
     mActiveIndex = pIndex; //Update the new active index to the one passed from the parameter
-    ui->yVelocitySpinBox->setValue(ui->mainDrawingWidget->getBall(mActiveIndex)->getVerticalVelocity());
-    ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(100, 100, 255, 255)); //set the active ball to a blue color
+
+    BallObject *lBall = ui->mainDrawingWidget->getBall(mActiveIndex);
+
+    ui->yVelocitySpinBox->setValue(lBall->getVerticalVelocity()); //update the spinboxes
+    ui->radiusSpinBox->setValue(lBall->getRadius());
+    ui->massSpinBox->setValue(lBall->getMass());
+    ui->timeSpinBox->setValue(lBall->getTime());
+
+    lBall->setColor(QColor(100, 100, 255, 255)); //set the active ball to a blue color
 
     ui->mainDrawingWidget->updateGL();
 }
 
-void GravityMainWindow::updateGUI()
+void GravityMainWindow::on_radiusSpinBox_valueChanged(int pValue)
 {
-    if(mActiveIndex >= 0) ui->yVelocitySpinBox->setValue(ui->mainDrawingWidget->getBall(mActiveIndex)->getVerticalVelocity());
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->getBall(mActiveIndex)->setRadius(pValue);
+    ui->mainDrawingWidget->updateGL();
+}
+
+void GravityMainWindow::on_massSpinBox_valueChanged(double pValue)
+{
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->getBall(mActiveIndex)->setMass(pValue);
+}
+
+void GravityMainWindow::on_yVelocitySpinBox_valueChanged(double pValue)
+{
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->getBall(mActiveIndex)->setVerticalVelocity(pValue);
+}
+
+void GravityMainWindow::on_gravitySpinBox_valueChanged(double pValue)
+{
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->updateGravity(pValue);
+}
+
+void GravityMainWindow::updateGUI() //Updates GUI with the ball update
+{
+    if(mActiveIndex >= 0)
+    {
+        BallObject *lBall = ui->mainDrawingWidget->getBall(mActiveIndex);
+        ui->timeSpinBox->setValue(lBall->getTime());
+        ui->yVelocitySpinBox->setValue(lBall->getVerticalVelocity());
+    }
 }
 
 void GravityMainWindow::on_resetButton_clicked()
 {
-    // DEBUG CODE
-    ui->testLabel->setText("reset");
+    timer->stop();
+    mStartSimulation = false;
+    ui->startButton->setText("Start");
+    mActiveIndex = -1;
+    mNumItems = 0;
+    ui->comboBox->clear();
+    ui->mainDrawingWidget->clearScene();
 }
 
 void GravityMainWindow::on_startButton_clicked()
 {
-    // DEBUG CODE
-    ui->testLabel->setText("start");
-
     if(!mStartSimulation)
     {
         //qDebug() << "GravityMainWindow: Starting";
         timer->start(50); //Update every 50 ms
+        ui->radiusSpinBox->setEnabled(false); //do not allow changes while the simulation is running
+        ui->gravitySpinBox->setEnabled(false);
+        ui->massSpinBox->setEnabled(false);
+        ui->yVelocitySpinBox->setEnabled(false);
+        ui->startButton->setText("Stop");
     }
     else
     {
         //qDebug() <<"GravityMainWindow: Pausing";
         timer->stop();
+        ui->radiusSpinBox->setEnabled(true);
+        ui->gravitySpinBox->setEnabled(true);
+        ui->massSpinBox->setEnabled(true);
+        ui->yVelocitySpinBox->setEnabled(true);
+        ui->startButton->setText("Start");
     }
     mStartSimulation = !mStartSimulation;
 

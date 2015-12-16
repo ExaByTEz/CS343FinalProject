@@ -3,15 +3,19 @@
 #include <QDataStream>
 #include <QDebug>
 
-BallObject::BallObject(const QPoint &pP1, const int pID)
+BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass, const double pYvelocity, const int pID)
 {
-    mRadius = 20;
+    mTime = 0;
+    mVerticalAcceleration  = 0;
+    mRadius = pRadius;
+    mMass = pMass;
     mCenter = pP1;
     mColor = QColor(255,100,100,255);
     mID = pID;
     mFrame = 0;
-    mInitialVelocity = 0;
-    mLossValue = 0.8;
+    mInitialVelocity = pYvelocity;
+    mLossValue = 0.5;
+    mInitialHeight = pP1.y();
     mCurrentVelocity = 0;
     mForces = 0;
     mGravity = 5;
@@ -26,9 +30,55 @@ void BallObject::setColor(const QColor &pColor)
     mColor = pColor;
 }
 
+void BallObject::setRadius(int pRadius)
+{
+    mRadius = pRadius;
+}
+
+void BallObject::setMass(double pMass)
+{
+    mMass = pMass;
+}
+
+void BallObject::setVerticalVelocity(double pVerticalVelocity)
+{
+    //mInitialVelocity = pVerticalVelocity;
+    mCurrentVelocity = pVerticalVelocity;
+}
+
+void BallObject::setGravity(double pGravity)
+{
+    mVerticalAcceleration = pGravity; //i.e. -9.81 m/s/s by default
+}
+
+void BallObject::setTime(double pTime)
+{
+    mTime = pTime;
+}
+
+
+
+int BallObject::getRadius() const
+{
+    return mRadius;
+}
+
+double BallObject::getMass() const
+{
+    return mMass;
+}
+
+double BallObject::getTime() const
+{
+    return mTime;
+}
+
+
+
 double BallObject::getVerticalVelocity()
 {
     return mCurrentVelocity;
+    //return mInitialVelocity;
 }
 
 void BallObject::predraw() const
@@ -78,30 +128,6 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
-    /*if(mCenter.y() < mRadius)
-    {
-        mCenter.ry() = mRadius;
-    }
-    else
-    {
-        mForces += -mMass*mGravity;
-    }
-    mVerticalAcceleration = mForces / mMass;
-    mFrame += mTimeStep;
-    mCurrentVelocity += mFrame * mVerticalAcceleration;
-    mCenter.ry() += (mFrame * mCurrentVelocity);
-
-
-    if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
-    {
-        mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
-    }
-    else
-    {
-        mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
-    }
-    mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;*/
-
         mForces += -mMass*mGravity;
         mVerticalAcceleration = mForces / mMass;
         mFrame += mTimeStep;
