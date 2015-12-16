@@ -5,16 +5,20 @@
 
 BallObject::BallObject(const QPoint &pP1, const int pID)
 {
-    mVerticalAcceleration  = -1-(qrand() % 9); //random velocity
     mRadius = 20;
     mCenter = pP1;
     mColor = QColor(255,100,100,255);
     mID = pID;
     mFrame = 0;
     mInitialVelocity = 0;
-    mLossValue = 0.5;
+    mLossValue = 0.8;
     mCurrentVelocity = 0;
-
+    mForces = 0;
+    mGravity = 5;
+    mTimeStep = 0.01;
+    mMass = 1;
+    mHorizontalVelocity = .1;
+    mHorizontalLossValue = 1;
 }
 
 void BallObject::setColor(const QColor &pColor)
@@ -26,7 +30,6 @@ double BallObject::getVerticalVelocity()
 {
     return mCurrentVelocity;
 }
-
 
 void BallObject::predraw() const
 {
@@ -75,20 +78,52 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
-
-    // Execute gravity
-    mCenter.ry() += mFrame*(mInitialVelocity+mVerticalAcceleration*mFrame/2);
-    mCurrentVelocity = mInitialVelocity + mVerticalAcceleration*mFrame;
-
-    // Iterate up one frame
-    mFrame++;
-
-    // If ball is below screen at all bounce ball
-    if(mCenter.y() - mRadius < 0)
+    /*if(mCenter.y() < mRadius)
     {
         mCenter.ry() = mRadius;
-        mInitialVelocity = -mCurrentVelocity*mLossValue;
-        mFrame = 0;
-
     }
+    else
+    {
+        mForces += -mMass*mGravity;
+    }
+    mVerticalAcceleration = mForces / mMass;
+    mFrame += mTimeStep;
+    mCurrentVelocity += mFrame * mVerticalAcceleration;
+    mCenter.ry() += (mFrame * mCurrentVelocity);
+
+
+    if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
+    {
+        mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
+    }
+    else
+    {
+        mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
+    }
+    mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;*/
+
+        mForces += -mMass*mGravity;
+        mVerticalAcceleration = mForces / mMass;
+        mFrame += mTimeStep;
+        if(mCenter.y() < mRadius)
+        {
+            mCurrentVelocity = -mCurrentVelocity*mLossValue;
+        }
+        else
+        {
+            mCurrentVelocity += mFrame * mVerticalAcceleration;
+        }
+
+        mCenter.ry() += (mFrame * mCurrentVelocity);
+
+
+        if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
+        {
+            mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
+        }
+        else
+        {
+            mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
+        }
+        mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
 }

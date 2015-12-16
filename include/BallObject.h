@@ -57,11 +57,16 @@ protected:
     double mThetaInDegrees;
     double mSx;
     double mSy;
-    int mFrame;
+    double mFrame;
     double mInitialVelocity;
     double mLossValue;
     double mCurrentVelocity;
-
+    double mForces;
+    double mGravity;
+    double mMass;
+    double mTimeStep;
+    double mHorizontalVelocity;
+    double mHorizontalLossValue;
 
     int mID;
 
