@@ -22,6 +22,7 @@ private:
     bool mStartSimulation = false;
     int mNumItems = 0;
     int mActiveIndex = -1;
+    void enableGUI(bool pEnabled);
 
 signals:
     void newBall(QPoint pP1, int pRadius, double pMass, double pYvelocity, int pID);

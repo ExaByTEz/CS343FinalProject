@@ -32,6 +32,17 @@ GravityMainWindow::~GravityMainWindow()
     delete ui;
 }
 
+void GravityMainWindow::enableGUI(bool pEnabled)
+{
+    ui->gravitySpinBox->setEnabled(pEnabled);
+    ui->massSpinBox->setEnabled(pEnabled);
+    ui->radiusSpinBox->setEnabled(pEnabled);
+    ui->yVelocitySpinBox->setEnabled(pEnabled);
+    ui->xVelocitySpinBox->setEnabled(pEnabled);
+    ui->startButton->setText((pEnabled ? "Start" : "Stop"));
+    ui->timeStepSpinBox->setEnabled(pEnabled);
+}
+
 void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPos)
 {
     //qDebug() << "GravityMainWindow.cpp: on_mainDrawingWidget_newPointRequested at " << pPos.x() <<"," << pPos.y();
@@ -116,34 +127,25 @@ void GravityMainWindow::on_resetButton_clicked()
 {
     timer->stop();
     mStartSimulation = false;
-    ui->startButton->setText("Start");
     mActiveIndex = -1;
     mNumItems = 0;
     ui->comboBox->clear();
     ui->mainDrawingWidget->clearScene();
+    enableGUI(true);
 }
 
 void GravityMainWindow::on_startButton_clicked()
 {
     if(!mStartSimulation)
     {
-        //qDebug() << "GravityMainWindow: Starting";
         timer->start(50); //Update every 50 ms
-        ui->radiusSpinBox->setEnabled(false); //do not allow changes while the simulation is running
-        ui->gravitySpinBox->setEnabled(false);
-        ui->massSpinBox->setEnabled(false);
-        ui->yVelocitySpinBox->setEnabled(false);
-        ui->startButton->setText("Stop");
+        enableGUI(false); //do not allow changes while the simulation is running
     }
     else
     {
         //qDebug() <<"GravityMainWindow: Pausing";
         timer->stop();
-        ui->radiusSpinBox->setEnabled(true);
-        ui->gravitySpinBox->setEnabled(true);
-        ui->massSpinBox->setEnabled(true);
-        ui->yVelocitySpinBox->setEnabled(true);
-        ui->startButton->setText("Start");
+        enableGUI(true);
     }
     mStartSimulation = !mStartSimulation;
 
