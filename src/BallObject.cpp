@@ -25,83 +25,99 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mGravity = 0; //Set externally from GL2DDrawingWidget
 }
 
+// Retrieve the ball's color
 void BallObject::setColor(const QColor &pColor)
 {
     mColor = pColor;
 }
 
+// Set the ball's radius
 void BallObject::setRadius(int pRadius)
 {
     mRadius = pRadius;
 }
 
+// Set the ball's mass
 void BallObject::setMass(double pMass)
 {
     mMass = pMass;
 }
 
+// Set the ball's vertical velocity
 void BallObject::setVerticalVelocity(double pVerticalVelocity)
 {
     //mInitialVelocity = pVerticalVelocity;
     mCurrentVelocity = pVerticalVelocity;
 }
 
+// Set The value for Gravity
 void BallObject::setGravity(double pGravity)
 {
     mGravity = pGravity; //i.e. -9.81 m/s/s by default
 }
 
+// Set the current time or the ball
 void BallObject::setTime(double pTime)
 {
     mTime = pTime;
 }
 
+// Set the ball's horizontal velocity
 void BallObject::setHorizontalVelocity(double pHorizontalVelocity)
 {
     mHorizontalVelocity = pHorizontalVelocity;
 }
 
+// Set the amount by which time iterates up
 void BallObject::setTimeStep(double pTimeStep)
 {
     mTimeStep = pTimeStep;
 }
 
+// Retrieve the ball's radius
 int BallObject::getRadius() const
 {
     return mRadius;
 }
 
+// Retrieve the ball's mass
 double BallObject::getMass() const
 {
     return mMass;
 }
 
+// Retrieve the current time
 double BallObject::getTime() const
 {
     return mTime;
 }
 
+// Retrieve the vertical velocity
 double BallObject::getVerticalVelocity()
 {
     return mCurrentVelocity;
     //return mInitialVelocity;
 }
 
+// Retrieve the loss value
 double BallObject::getLossValue()
 {
     return mLossValue;
 }
 
+// Retrieve the vertical acceleration
 double BallObject::getVerticalAcceleration()
 {
     return mVerticalAcceleration;
 }
 
+// Retrieve the horizontal velocity
 double BallObject::getHorizontalVelocity()
 {
     return mHorizontalVelocity;
 }
 
+// Retrieve the timestep value
 double BallObject::getTimeStep()
 {
     return mTimeStep;
