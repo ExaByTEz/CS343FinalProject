@@ -3,6 +3,7 @@
 #include <QDataStream>
 #include <QDebug>
 
+// Intialize a ball object with given values
 BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass, const double pInitialYvelocity, const int pID)
 {
     mTime = 0;
