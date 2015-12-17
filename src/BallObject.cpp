@@ -18,7 +18,7 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mForces = 0;
     mTimeStep = 0.001;
     mMass = 1;
-    mHorizontalVelocity = .009;
+    mHorizontalVelocity = .001;
     mHorizontalLossValue = .999;
     mForces = 0;
     mMass = 10;
@@ -56,8 +56,6 @@ void BallObject::setTime(double pTime)
     mTime = pTime;
 }
 
-
-
 int BallObject::getRadius() const
 {
     return mRadius;
@@ -72,8 +70,6 @@ double BallObject::getTime() const
 {
     return mTime;
 }
-
-
 
 double BallObject::getVerticalVelocity()
 {
