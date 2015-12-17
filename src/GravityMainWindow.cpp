@@ -8,6 +8,8 @@
 #include <QGLWidget>
 #include <QPalette>
 #include <QDebug>
+
+// Main window constructor
 GravityMainWindow::GravityMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GravityMainWindow)
@@ -25,13 +27,13 @@ GravityMainWindow::GravityMainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), ui->mainDrawingWidget, SLOT(updateBall()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateGUI()));
 }
-
+// Main window destructor
 GravityMainWindow::~GravityMainWindow()
 {
     delete timer;
     delete ui;
 }
-
+// Enables GUI objects to be altered
 void GravityMainWindow::enableGUI(bool pEnabled)
 {
     ui->gravitySpinBox->setEnabled(pEnabled);
@@ -73,38 +75,38 @@ void GravityMainWindow::on_comboBox_currentIndexChanged(int pIndex)
 
     ui->mainDrawingWidget->updateGL();
 }
-
+// applies radius value to selected ball
 void GravityMainWindow::on_radiusSpinBox_valueChanged(int pValue)
 {
     if(mActiveIndex < 0) return;
     ui->mainDrawingWidget->getBall(mActiveIndex)->setRadius(pValue);
     ui->mainDrawingWidget->updateGL();
 }
-
+// applies mass value to selected ball
 void GravityMainWindow::on_massSpinBox_valueChanged(double pValue)
 {
     if(mActiveIndex < 0) return;
     ui->mainDrawingWidget->getBall(mActiveIndex)->setMass(pValue);
 }
-
+// applies y velocity value to selected ball
 void GravityMainWindow::on_yVelocitySpinBox_valueChanged(double pValue)
 {
     if(mActiveIndex < 0) return;
     ui->mainDrawingWidget->getBall(mActiveIndex)->setVerticalVelocity(pValue);
 }
-
+// applies x velocity value to selected ball
 void GravityMainWindow::on_xVelocitySpinBox_valueChanged(double pValue)
 {
     if(mActiveIndex < 0) return;
     ui->mainDrawingWidget->getBall(mActiveIndex)->setHorizontalVelocity(pValue);
 }
-
+// applies gravity value to selected ball
 void GravityMainWindow::on_gravitySpinBox_valueChanged(double pValue)
 {
     if(mActiveIndex < 0) return;
     ui->mainDrawingWidget->updateGravity(pValue);
 }
-
+// updates current time step value
 void GravityMainWindow::on_timeStepSpinBox_valueChanged(double pValue)
 {
     if(mActiveIndex < 0) return;
@@ -122,7 +124,7 @@ void GravityMainWindow::updateGUI() //Updates GUI with the ball update
         ui->xVelocitySpinBox->setValue(lBall->getHorizontalVelocity());
     }
 }
-
+// Resets simulation to original state
 void GravityMainWindow::on_resetButton_clicked()
 {
     timer->stop();
@@ -133,7 +135,7 @@ void GravityMainWindow::on_resetButton_clicked()
     ui->mainDrawingWidget->clearScene();
     enableGUI(true);
 }
-
+// Starts timer and physics calculations
 void GravityMainWindow::on_startButton_clicked()
 {
     if(!mStartSimulation)
