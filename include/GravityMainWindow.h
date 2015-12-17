@@ -38,7 +38,10 @@ protected slots:
     void on_radiusSpinBox_valueChanged(int pValue);
     void on_massSpinBox_valueChanged(double pValue);
     void on_yVelocitySpinBox_valueChanged(double pValue);
+    void on_xVelocitySpinBox_valueChanged(double pValue);
     void on_gravitySpinBox_valueChanged(double pValue);
+    void on_timeStepSpinBox_valueChanged(double pValue);
+
     void updateGUI();
 };
 

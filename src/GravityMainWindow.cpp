@@ -38,6 +38,7 @@ void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPo
     if(mStartSimulation) return; //Don't allow user to add a ball while running
     emit newBall(pPos,ui->radiusSpinBox->value(), ui->massSpinBox->value(), 0, ++mNumItems);
     ui->mainDrawingWidget->updateGravity(ui->gravitySpinBox->value()); //update gravity on new ball
+    ui->mainDrawingWidget->updateTimeStep(ui->timeStepSpinBox->value());
 
     ui->comboBox->addItem("Ball " + QString::number(mNumItems));
     ui->comboBox->setCurrentIndex(ui->comboBox->count()-1); //Set focus to most recent item
@@ -81,10 +82,22 @@ void GravityMainWindow::on_yVelocitySpinBox_valueChanged(double pValue)
     ui->mainDrawingWidget->getBall(mActiveIndex)->setVerticalVelocity(pValue);
 }
 
+void GravityMainWindow::on_xVelocitySpinBox_valueChanged(double pValue)
+{
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->getBall(mActiveIndex)->setHorizontalVelocity(pValue);
+}
+
 void GravityMainWindow::on_gravitySpinBox_valueChanged(double pValue)
 {
     if(mActiveIndex < 0) return;
     ui->mainDrawingWidget->updateGravity(pValue);
+}
+
+void GravityMainWindow::on_timeStepSpinBox_valueChanged(double pValue)
+{
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->updateTimeStep(pValue);
 }
 
 void GravityMainWindow::updateGUI() //Updates GUI with the ball update
@@ -92,8 +105,10 @@ void GravityMainWindow::updateGUI() //Updates GUI with the ball update
     if(mActiveIndex >= 0)
     {
         BallObject *lBall = ui->mainDrawingWidget->getBall(mActiveIndex);
+        ui->timeStepSpinBox->setValue(lBall->getTimeStep());
         ui->timeSpinBox->setValue(lBall->getTime());
         ui->yVelocitySpinBox->setValue(lBall->getVerticalVelocity());
+        ui->xVelocitySpinBox->setValue(lBall->getHorizontalVelocity());
     }
 }
 

@@ -19,6 +19,8 @@ public:
     void setVerticalVelocity(double pVerticalVelocity);
     void setGravity(double pGravity);
     void setTime(double pTime);
+    void setHorizontalVelocity(double pHorizontalVelocity);
+    void setTimeStep(double pTimeStep);
 
     // Move or rotate the object
     void translate(double pTx, double pTy);
@@ -45,6 +47,8 @@ public:
     double getInitialVelocity();
     double getLossValue();
     double getVerticalAcceleration();
+    double getHorizontalVelocity();
+    double getTimeStep();
 
     int getRotationAngle() const;
 

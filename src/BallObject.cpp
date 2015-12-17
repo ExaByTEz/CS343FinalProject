@@ -18,7 +18,7 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mForces = 0;
     mTimeStep = 0.05;
     mMass = 1;
-    mHorizontalVelocity = .1;
+    mHorizontalVelocity = 0;
     mHorizontalLossValue = 1;
     mForces = 0;
     mMass = 10;
@@ -56,6 +56,16 @@ void BallObject::setTime(double pTime)
     mTime = pTime;
 }
 
+void BallObject::setHorizontalVelocity(double pHorizontalVelocity)
+{
+    mHorizontalVelocity = pHorizontalVelocity;
+}
+
+void BallObject::setTimeStep(double pTimeStep)
+{
+    mTimeStep = pTimeStep;
+}
+
 
 
 int BallObject::getRadius() const
@@ -89,6 +99,16 @@ double BallObject::getLossValue()
 double BallObject::getVerticalAcceleration()
 {
     return mVerticalAcceleration;
+}
+
+double BallObject::getHorizontalVelocity()
+{
+    return mHorizontalVelocity;
+}
+
+double BallObject::getTimeStep()
+{
+    return mTimeStep;
 }
 
 void BallObject::predraw() const
@@ -138,19 +158,22 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
-        mForces += -mMass*mGravity;
+        mForces = -mMass*mGravity;
         mVerticalAcceleration = mForces / mMass;
         mTime += mTimeStep;
+        bool collided = false;
         if(mCenter.y() < mRadius)
         {
+            collided = true;
             mCurrentVelocity = -mCurrentVelocity*mLossValue;
+            //mTime = mTimeStep;
         }
         else
         {
             mCurrentVelocity += mTime * mVerticalAcceleration;
         }
 
-        mCenter.ry() += (mTime * mCurrentVelocity);
+        mCenter.ry() += mTime * mCurrentVelocity;
 
 
         if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
@@ -162,6 +185,14 @@ void BallObject::update()
             mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
         }
         mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
+
+
+        if(abs(mCurrentVelocity) <= 0.02 && mCenter.y() < mRadius)
+        {
+
+            mCurrentVelocity = 0;
+
+        }
 
 
 }
