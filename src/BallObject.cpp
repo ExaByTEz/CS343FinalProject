@@ -3,7 +3,7 @@
 #include <QDataStream>
 #include <QDebug>
 
-BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass, const double pYvelocity, const int pID)
+BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass, const double pInitialYvelocity, const int pID)
 {
     mTime = 0;
     mVerticalAcceleration  = 0;
@@ -13,16 +13,17 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mColor = QColor(255,100,100,255);
     mID = pID;
     mFrame = 0;
-    mInitialVelocity = pYvelocity;
-    mLossValue = 0.5;
     mInitialHeight = pP1.y();
-    mCurrentVelocity = 0;
+    mLossValue = 0.8;
+    mCurrentVelocity = pInitialYvelocity;
     mForces = 0;
-    mGravity = 5;
     mTimeStep = 0.01;
     mMass = 1;
     mHorizontalVelocity = .1;
     mHorizontalLossValue = 1;
+    mForces = 0;
+    mMass = 10;
+    mGravity = 0; //Set externally from GL2DDrawingWidget
 }
 
 void BallObject::setColor(const QColor &pColor)
@@ -48,7 +49,7 @@ void BallObject::setVerticalVelocity(double pVerticalVelocity)
 
 void BallObject::setGravity(double pGravity)
 {
-    mVerticalAcceleration = pGravity; //i.e. -9.81 m/s/s by default
+    mGravity = pGravity; //i.e. -9.81 m/s/s by default
 }
 
 void BallObject::setTime(double pTime)
@@ -79,6 +80,16 @@ double BallObject::getVerticalVelocity()
 {
     return mCurrentVelocity;
     //return mInitialVelocity;
+}
+
+double BallObject::getLossValue()
+{
+    return mLossValue;
+}
+
+double BallObject::getVerticalAcceleration()
+{
+    return mVerticalAcceleration;
 }
 
 void BallObject::predraw() const
@@ -152,4 +163,6 @@ void BallObject::update()
             mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
         }
         mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
+
+
 }
