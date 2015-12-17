@@ -32,12 +32,24 @@ GravityMainWindow::~GravityMainWindow()
     delete ui;
 }
 
+void GravityMainWindow::enableGUI(bool pEnabled)
+{
+    ui->gravitySpinBox->setEnabled(pEnabled);
+    ui->massSpinBox->setEnabled(pEnabled);
+    ui->radiusSpinBox->setEnabled(pEnabled);
+    ui->yVelocitySpinBox->setEnabled(pEnabled);
+    ui->xVelocitySpinBox->setEnabled(pEnabled);
+    ui->startButton->setText((pEnabled ? "Start" : "Stop"));
+    ui->timeStepSpinBox->setEnabled(pEnabled);
+}
+
 void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPos)
 {
     //qDebug() << "GravityMainWindow.cpp: on_mainDrawingWidget_newPointRequested at " << pPos.x() <<"," << pPos.y();
     if(mStartSimulation) return; //Don't allow user to add a ball while running
     emit newBall(pPos,ui->radiusSpinBox->value(), ui->massSpinBox->value(), 0, ++mNumItems);
     ui->mainDrawingWidget->updateGravity(ui->gravitySpinBox->value()); //update gravity on new ball
+    ui->mainDrawingWidget->updateTimeStep(ui->timeStepSpinBox->value());
 
     ui->comboBox->addItem("Ball " + QString::number(mNumItems));
     ui->comboBox->setCurrentIndex(ui->comboBox->count()-1); //Set focus to most recent item
@@ -81,10 +93,22 @@ void GravityMainWindow::on_yVelocitySpinBox_valueChanged(double pValue)
     ui->mainDrawingWidget->getBall(mActiveIndex)->setVerticalVelocity(pValue);
 }
 
+void GravityMainWindow::on_xVelocitySpinBox_valueChanged(double pValue)
+{
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->getBall(mActiveIndex)->setHorizontalVelocity(pValue);
+}
+
 void GravityMainWindow::on_gravitySpinBox_valueChanged(double pValue)
 {
     if(mActiveIndex < 0) return;
     ui->mainDrawingWidget->updateGravity(pValue);
+}
+
+void GravityMainWindow::on_timeStepSpinBox_valueChanged(double pValue)
+{
+    if(mActiveIndex < 0) return;
+    ui->mainDrawingWidget->updateTimeStep(pValue);
 }
 
 void GravityMainWindow::updateGUI() //Updates GUI with the ball update
@@ -92,8 +116,10 @@ void GravityMainWindow::updateGUI() //Updates GUI with the ball update
     if(mActiveIndex >= 0)
     {
         BallObject *lBall = ui->mainDrawingWidget->getBall(mActiveIndex);
+        ui->timeStepSpinBox->setValue(lBall->getTimeStep());
         ui->timeSpinBox->setValue(lBall->getTime());
         ui->yVelocitySpinBox->setValue(lBall->getVerticalVelocity());
+        ui->xVelocitySpinBox->setValue(lBall->getHorizontalVelocity());
     }
 }
 
@@ -101,34 +127,25 @@ void GravityMainWindow::on_resetButton_clicked()
 {
     timer->stop();
     mStartSimulation = false;
-    ui->startButton->setText("Start");
     mActiveIndex = -1;
     mNumItems = 0;
     ui->comboBox->clear();
     ui->mainDrawingWidget->clearScene();
+    enableGUI(true);
 }
 
 void GravityMainWindow::on_startButton_clicked()
 {
     if(!mStartSimulation)
     {
-        //qDebug() << "GravityMainWindow: Starting";
         timer->start(50); //Update every 50 ms
-        ui->radiusSpinBox->setEnabled(false); //do not allow changes while the simulation is running
-        ui->gravitySpinBox->setEnabled(false);
-        ui->massSpinBox->setEnabled(false);
-        ui->yVelocitySpinBox->setEnabled(false);
-        ui->startButton->setText("Stop");
+        enableGUI(false); //do not allow changes while the simulation is running
     }
     else
     {
         //qDebug() <<"GravityMainWindow: Pausing";
         timer->stop();
-        ui->radiusSpinBox->setEnabled(true);
-        ui->gravitySpinBox->setEnabled(true);
-        ui->massSpinBox->setEnabled(true);
-        ui->yVelocitySpinBox->setEnabled(true);
-        ui->startButton->setText("Start");
+        enableGUI(true);
     }
     mStartSimulation = !mStartSimulation;
 

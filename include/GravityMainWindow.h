@@ -22,6 +22,7 @@ private:
     bool mStartSimulation = false;
     int mNumItems = 0;
     int mActiveIndex = -1;
+    void enableGUI(bool pEnabled);
 
 signals:
     void newBall(QPoint pP1, int pRadius, double pMass, double pYvelocity, int pID);
@@ -38,7 +39,10 @@ protected slots:
     void on_radiusSpinBox_valueChanged(int pValue);
     void on_massSpinBox_valueChanged(double pValue);
     void on_yVelocitySpinBox_valueChanged(double pValue);
+    void on_xVelocitySpinBox_valueChanged(double pValue);
     void on_gravitySpinBox_valueChanged(double pValue);
+    void on_timeStepSpinBox_valueChanged(double pValue);
+
     void updateGUI();
 };
 

@@ -146,6 +146,14 @@ void GL2DDrawingWidget::updateGravity(double pValue)
     }
 }
 
+void GL2DDrawingWidget::updateTimeStep(double pValue)
+{
+    for(int i=0; i<mScene.size(); i++)
+    {
+        mScene[i]->setTimeStep(pValue);
+    }
+}
+
 void GL2DDrawingWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     // For left-button clicks, signal the request for a new mouse point

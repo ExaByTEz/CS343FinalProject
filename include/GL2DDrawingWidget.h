@@ -18,6 +18,7 @@ public:
     GL2DDrawingWidget(QWidget *parent = 0, QGLWidget *share = 0);
     virtual ~GL2DDrawingWidget();
     void updateGravity(double pValue);
+    void updateTimeStep(double pValue);
     void debugMessage(QString pMsg);
     void clearScene();
     BallObject* getBall(int pIndex);
