@@ -12,12 +12,11 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mCenter = pP1;
     mColor = QColor(255,100,100,255);
     mID = pID;
-    mFrame = 0;
     mInitialHeight = pP1.y();
     mLossValue = 0.8;
     mCurrentVelocity = pInitialYvelocity;
     mForces = 0;
-    mTimeStep = 0.01;
+    mTimeStep = 0.05;
     mMass = 1;
     mHorizontalVelocity = .1;
     mHorizontalLossValue = 1;
@@ -141,17 +140,17 @@ void BallObject::update()
 {
         mForces += -mMass*mGravity;
         mVerticalAcceleration = mForces / mMass;
-        mFrame += mTimeStep;
+        mTime += mTimeStep;
         if(mCenter.y() < mRadius)
         {
             mCurrentVelocity = -mCurrentVelocity*mLossValue;
         }
         else
         {
-            mCurrentVelocity += mFrame * mVerticalAcceleration;
+            mCurrentVelocity += mTime * mVerticalAcceleration;
         }
 
-        mCenter.ry() += (mFrame * mCurrentVelocity);
+        mCenter.ry() += (mTime * mCurrentVelocity);
 
 
         if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
