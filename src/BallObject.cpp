@@ -16,10 +16,10 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mLossValue = 0.8;
     mCurrentVelocity = pInitialYvelocity;
     mForces = 0;
-    mTimeStep = 0.05;
+    mTimeStep = 0.001;
     mMass = 1;
-    mHorizontalVelocity = .1;
-    mHorizontalLossValue = 1;
+    mHorizontalVelocity = .009;
+    mHorizontalLossValue = .999;
     mForces = 0;
     mMass = 10;
     mGravity = 0; //Set externally from GL2DDrawingWidget
@@ -141,7 +141,7 @@ void BallObject::update()
         mForces += -mMass*mGravity;
         mVerticalAcceleration = mForces / mMass;
         mTime += mTimeStep;
-        if(mCenter.y() < mRadius)
+        if(mCenter.y() < 2*mRadius)
         {
             mCurrentVelocity = -mCurrentVelocity*mLossValue;
         }
@@ -159,7 +159,14 @@ void BallObject::update()
         }
         else
         {
-            mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
+            if(mHorizontalVelocity <= 0.0001)
+            {
+                mHorizontalVelocity = 0;
+            }
+            else
+            {
+                mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
+            }
         }
         mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
 
