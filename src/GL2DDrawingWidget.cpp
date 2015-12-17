@@ -2,7 +2,6 @@
 
 #include "GL2DDrawingWidget.h"
 
-#include <QDebug>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QGLShaderProgram>
@@ -138,6 +137,7 @@ void GL2DDrawingWidget::drawContents()
     glPopMatrix();
 }
 
+//Called when an update is performed to the global gravity, set each ball object to have the same
 void GL2DDrawingWidget::updateGravity(double pValue)
 {
     for(int i=0; i<mScene.size(); i++)
@@ -146,6 +146,7 @@ void GL2DDrawingWidget::updateGravity(double pValue)
     }
 }
 
+//Called when an update is performed to the time step, set each ball to have the same
 void GL2DDrawingWidget::updateTimeStep(double pValue)
 {
     for(int i=0; i<mScene.size(); i++)
@@ -176,17 +177,17 @@ inline QPoint GL2DDrawingWidget::qtWidgetCoordsToOpenGLCoords(const QPoint &pPos
     return QPoint(pPos.x(), (mH - 1) - pPos.y());
 }
 
-
+//GravityMainWindow::newBall signal is connected to GL2DDrawingWidget::addBall slot
 void GL2DDrawingWidget::addBall(QPoint pP1, int pRadius, double pMass, double pYvelocity, int pID)
 {
 
     BallObject *newBall = new BallObject(pP1, pRadius, pMass, pYvelocity, pID);
     mScene.push_back((BallObject*)newBall); //Add ball to the scene
-    //debugMessage(QString("GL2DDrawingWidget: addBall() called, created ball at ") + QString::number(newBall->mCenter.x()) + QString(",") + QString::number(newBall->mCenter.y()));
 
     updateGL();
 }
 
+//Calls the update() function from every ball object
 void GL2DDrawingWidget::updateBall()
 {
     //Update every ball
@@ -198,11 +199,7 @@ void GL2DDrawingWidget::updateBall()
     updateGL();
 }
 
-void GL2DDrawingWidget::debugMessage(QString pMsg)
-{
-    qDebug() << pMsg;
-}
-
+//Remove everything from the scene
 void GL2DDrawingWidget::clearScene()
 {
     while(!mScene.isEmpty())
@@ -213,6 +210,7 @@ void GL2DDrawingWidget::clearScene()
     updateGL();
 }
 
+//Retrieve a ball from the mScene list
 BallObject *GL2DDrawingWidget::getBall(int pIndex)
 {
     return mScene[pIndex];

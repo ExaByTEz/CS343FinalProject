@@ -7,7 +7,6 @@
 #include <QMainWindow>
 #include <QGLWidget>
 #include <QPalette>
-#include <QDebug>
 GravityMainWindow::GravityMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GravityMainWindow)
@@ -45,7 +44,6 @@ void GravityMainWindow::enableGUI(bool pEnabled)
 
 void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPos)
 {
-    //qDebug() << "GravityMainWindow.cpp: on_mainDrawingWidget_newPointRequested at " << pPos.x() <<"," << pPos.y();
     if(mStartSimulation) return; //Don't allow user to add a ball while running
     emit newBall(pPos,ui->radiusSpinBox->value(), ui->massSpinBox->value(), 0, ++mNumItems);
     ui->mainDrawingWidget->updateGravity(ui->gravitySpinBox->value()); //update gravity on new ball
@@ -57,7 +55,6 @@ void GravityMainWindow::on_mainDrawingWidget_newPointRequested(const QPoint &pPo
 
 void GravityMainWindow::on_comboBox_currentIndexChanged(int pIndex)
 {
-    //qDebug() << "GravityMainWindow: Selection changed to " + QString::number(pIndex);
     if(pIndex < 0) return; //when the combobox is cleared
     if(mActiveIndex >= 0) ui->mainDrawingWidget->getBall(mActiveIndex)->setColor(QColor(255, 100, 100, 255)); //set the previous ball to a default color
     mActiveIndex = pIndex; //Update the new active index to the one passed from the parameter
@@ -139,13 +136,12 @@ void GravityMainWindow::on_startButton_clicked()
     if(!mStartSimulation)
     {
         timer->start(50); //Update every 50 ms
-        enableGUI(false); //do not allow changes while the simulation is running
+        enableGUI(false); //Do not allow changes while the simulation is running
     }
     else
     {
-        //qDebug() <<"GravityMainWindow: Pausing";
         timer->stop();
-        enableGUI(true);
+        enableGUI(true); //Allow updates to the GUI again
     }
     mStartSimulation = !mStartSimulation;
 

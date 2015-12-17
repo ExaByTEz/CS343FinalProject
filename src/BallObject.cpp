@@ -1,7 +1,6 @@
 #include "cgcommon.h"
 #include "BallObject.h"
 #include <QDataStream>
-#include <QDebug>
 
 BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass, const double pInitialYvelocity, const int pID)
 {
@@ -160,7 +159,6 @@ void BallObject::update()
         if(mCenter.y() < 2*mRadius)
         {
             mCurrentVelocity = -mCurrentVelocity*mLossValue;
-            //mTime = mTimeStep;
         }
         else
         {

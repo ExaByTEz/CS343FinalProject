@@ -49,9 +49,9 @@ private:
     virtual void postPaintPreSwap() {}
 
     virtual void drawContents();
-    QList<BallObject*> mScene;
-    int mActiveShapeIndex;
-    int mW = 500;
+    QList<BallObject*> mScene; //List of all ball objects
+    int mActiveShapeIndex; //Index to currently active ball object
+    int mW = 500; //Fixed 500x500 render area
     int mH = 500;
     QTimer *mIdleTimer;
 
