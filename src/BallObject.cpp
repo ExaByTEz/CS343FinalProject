@@ -2,6 +2,7 @@
 #include "BallObject.h"
 #include <QDataStream>
 
+// Intialize a ball object with given values
 BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass, const double pInitialYvelocity, const int pID)
 {
     mTime = 0;
@@ -24,83 +25,99 @@ BallObject::BallObject(const QPoint &pP1, const int pRadius, const double pMass,
     mGravity = 0; //Set externally from GL2DDrawingWidget
 }
 
+// Retrieve the ball's color
 void BallObject::setColor(const QColor &pColor)
 {
     mColor = pColor;
 }
 
+// Set the ball's radius
 void BallObject::setRadius(int pRadius)
 {
     mRadius = pRadius;
 }
 
+// Set the ball's mass
 void BallObject::setMass(double pMass)
 {
     mMass = pMass;
 }
 
+// Set the ball's vertical velocity
 void BallObject::setVerticalVelocity(double pVerticalVelocity)
 {
     //mInitialVelocity = pVerticalVelocity;
     mCurrentVelocity = pVerticalVelocity;
 }
 
+// Set The value for Gravity
 void BallObject::setGravity(double pGravity)
 {
     mGravity = pGravity; //i.e. -9.81 m/s/s by default
 }
 
+// Set the current time or the ball
 void BallObject::setTime(double pTime)
 {
     mTime = pTime;
 }
 
+// Set the ball's horizontal velocity
 void BallObject::setHorizontalVelocity(double pHorizontalVelocity)
 {
     mHorizontalVelocity = pHorizontalVelocity;
 }
 
+// Set the amount by which time iterates up
 void BallObject::setTimeStep(double pTimeStep)
 {
     mTimeStep = pTimeStep;
 }
 
+// Retrieve the ball's radius
 int BallObject::getRadius() const
 {
     return mRadius;
 }
 
+// Retrieve the ball's mass
 double BallObject::getMass() const
 {
     return mMass;
 }
 
+// Retrieve the current time
 double BallObject::getTime() const
 {
     return mTime;
 }
 
+// Retrieve the vertical velocity
 double BallObject::getVerticalVelocity()
 {
     return mCurrentVelocity;
     //return mInitialVelocity;
 }
 
+// Retrieve the loss value
 double BallObject::getLossValue()
 {
     return mLossValue;
 }
 
+// Retrieve the vertical acceleration
 double BallObject::getVerticalAcceleration()
 {
     return mVerticalAcceleration;
 }
 
+// Retrieve the horizontal velocity
 double BallObject::getHorizontalVelocity()
 {
     return mHorizontalVelocity;
 }
 
+// Retrieve the timestep value
 double BallObject::getTimeStep()
 {
     return mTimeStep;
@@ -153,38 +170,43 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
-        mForces = -mMass*mGravity;
-        mVerticalAcceleration = mForces / mMass;
-        mTime += mTimeStep;
-        if(mCenter.y() < 2*mRadius)
-        {
-            mCurrentVelocity = -mCurrentVelocity*mLossValue;
-        }
-        else
-        {
-            mCurrentVelocity += mTime * mVerticalAcceleration;
-        }
+    // Calculate forces based on gravity
+    mForces = -mMass*mGravity;
+    mVerticalAcceleration = mForces / mMass;
 
-        mCenter.ry() += mTime * mCurrentVelocity;
+    // Update the time by the timestep
+    mTime += mTimeStep;
 
+    // If ball hits the floor, reverse the direction and reduce by the loss value
+    if(mCenter.y() < 2*mRadius)
+    {
+        mCurrentVelocity = -mCurrentVelocity*mLossValue;
+    }
+    else
+    {
+        mCurrentVelocity += mTime * mVerticalAcceleration;
+    }
 
-        if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
-        {
-            mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
-        }
-        else
-        {
-            mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
-        }
-        mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
+    // Update vertical component's position
+    mCenter.ry() += mTime * mCurrentVelocity;
 
+    // If the ball hits one of the sides, bounce it off
+    if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
+    {
+        mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
+    }
 
-        if(abs(mCurrentVelocity) <= 0.02 && mCenter.y() < mRadius)
-        {
+    // Otherwise, just move the horizontal componenet
+    else
+    {
+        mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
+    }
+    // Add the new distance to the horizontal ball movement
+    mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
 
-            mCurrentVelocity = 0;
-
-        }
-
-
+    // If the ball is moving slow enough in the horizontal direction, just stop it
+    if(abs(mCurrentVelocity) <= 0.02 && mCenter.y() < mRadius)
+    {
+        mCurrentVelocity = 0;
+    }
 }
