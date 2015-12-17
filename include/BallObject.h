@@ -69,7 +69,6 @@ protected:
     double mThetaInDegrees;
     double mSx;
     double mSy;
-    double mFrame;
     double mLossValue;
     double mCurrentVelocity;
     double mMass;
