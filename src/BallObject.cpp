@@ -154,39 +154,43 @@ int BallObject::getID()
 //Updates the ball
 void BallObject::update()
 {
-        mForces = -mMass*mGravity;
-        mVerticalAcceleration = mForces / mMass;
-        mTime += mTimeStep;
-        if(mCenter.y() < 2*mRadius)
-        {
-            mCurrentVelocity = -mCurrentVelocity*mLossValue;
-            //mTime = mTimeStep;
-        }
-        else
-        {
-            mCurrentVelocity += mTime * mVerticalAcceleration;
-        }
+    // Calculate forces based on gravity
+    mForces = -mMass*mGravity;
+    mVerticalAcceleration = mForces / mMass;
 
-        mCenter.ry() += mTime * mCurrentVelocity;
+    // Update the time by the timestep
+    mTime += mTimeStep;
 
+    // If ball hits the floor, reverse the direction and reduce by the loss value
+    if(mCenter.y() < 2*mRadius)
+    {
+        mCurrentVelocity = -mCurrentVelocity*mLossValue;
+    }
+    else
+    {
+        mCurrentVelocity += mTime * mVerticalAcceleration;
+    }
 
-        if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
-        {
-            mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
-        }
-        else
-        {
-            mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
-        }
-        mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
+    // Update vertical component's position
+    mCenter.ry() += mTime * mCurrentVelocity;
 
+    // If the ball hits one of the sides, bounce it off
+    if(mCenter.x()< mRadius || mCenter.x() > 500-mRadius)
+    {
+        mHorizontalVelocity = -(mHorizontalVelocity*mHorizontalLossValue);
+    }
 
-        if(abs(mCurrentVelocity) <= 0.02 && mCenter.y() < mRadius)
-        {
+    // Otherwise, just move the horizontal componenet
+    else
+    {
+        mHorizontalVelocity = (mHorizontalVelocity*mHorizontalLossValue);
+    }
+    // Add the new distance to the horizontal ball movement
+    mCenter.rx() = mCenter.x()+mHorizontalVelocity/mTimeStep;
 
-            mCurrentVelocity = 0;
-
-        }
-
-
+    // If the ball is moving slow enough in the horizontal direction, just stop it
+    if(abs(mCurrentVelocity) <= 0.02 && mCenter.y() < mRadius)
+    {
+        mCurrentVelocity = 0;
+    }
 }
